@@ -1,0 +1,281 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Montserrat', sans-serif;
+}
+
+body {
+    background-color: #ffffff;
+    color: #000000;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Navbar Superior */
+.navbar {
+    padding: 20px 40px;
+    background-color: #ffffff;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.logo-container {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.logo-icon {
+    height: 32px;
+    width: auto;
+}
+
+.brand-name {
+    font-weight: 700;
+    font-size: 16px;
+    letter-spacing: 0.5px;
+    color: #000000;
+}
+
+/* Contenedor Principal */
+.main-container {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 40px 20px;
+}
+
+/* Tarjeta Blanca Central */
+.card {
+    background: #ffffff;
+    border-radius: 20px;
+    padding: 48px 40px;
+    width: 100%;
+    max-width: 580px;
+    box-shadow: 0 4px 25px rgba(0, 0, 0, 0.05);
+    text-align: center;
+    border: 1px solid #f5f5f5;
+}
+
+.card-logo img {
+    height: 150px;
+    width: auto;
+    margin-bottom: 25px;
+}
+
+.card-title {
+    font-size: 18px;
+    font-weight: 700;
+    margin-bottom: 12px;
+    letter-spacing: 0.5px;
+    color: #000000;
+}
+
+.card-subtitle {
+    font-size: 13px;
+    color: #333333;
+    line-height: 1.5;
+    margin-bottom: 32px;
+}
+
+/* Botones */
+.button-group {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+.btn {
+    width: 100%;
+    padding: 14px 20px;
+    border-radius: 25px;
+    border: none;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.2s ease, transform 0.1s ease;
+}
+
+.btn:active {
+    transform: scale(0.99);
+}
+
+.btn-orange {
+    background-color: #ff8c00;
+    color: #ffffff;
+}
+
+.btn-orange:hover {
+    background-color: #e67e00;
+}
+
+.btn-dark {
+    background-color: #333333;
+    color: #ffffff;
+}
+
+.btn-dark:hover {
+    background-color: #222222;
+}
+
+/* Pie de página con Checkbox y Términos */
+.terms-footer {
+    margin-top: 40px;
+    display: flex;
+    justify-content: center;
+}
+
+.checkbox-container {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    cursor: pointer;
+    user-select: none;
+}
+
+/* Ocultar el checkbox nativo */
+.checkbox-container input {
+    position: absolute;
+    opacity: 0;
+    cursor: pointer;
+    height: 0;
+    width: 0;
+}
+
+/* Checkbox cuadrado personalizado */
+.custom-checkbox {
+    width: 24px;
+    height: 24px;
+    border: 2px solid #000000;
+    background-color: transparent;
+    display: inline-block;
+    box-sizing: border-box;
+    transition: background-color 0.2s ease, border-color 0.2s ease;
+    flex-shrink: 0;
+}
+
+/* Estado seleccionado (Checked) */
+.checkbox-container input:checked ~ .custom-checkbox {
+    background-color: #ff8c00;
+    border-color: #ff8c00;
+}
+
+/* Texto de Términos */
+.terms-text {
+    font-size: 14px;
+    color: #000000;
+    line-height: 1.35;
+    font-weight: 400;
+    text-align: left;
+}
+
+/* Enlace a términos y subrayado */
+.brand-link {
+    color: #000000;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    font-weight: 500;
+}
+
+/* Palabra "Service" en naranja */
+.orange-text {
+    color: #ff8c00;
+}
+
+
+/* --- Ajustes específicos para Login --- */
+
+.card-login {
+    position: relative;
+    padding-top: 40px;
+}
+
+/* Botón flecha hacia atrás */
+.btn-back {
+    position: absolute;
+    top: 28px;
+    left: 28px;
+    background: none;
+    border: none;
+    font-size: 18px;
+    color: #000000;
+    cursor: pointer;
+    padding: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Formulario e Inputs */
+.login-form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    text-align: left;
+    margin-bottom: 20px;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.form-group label {
+    font-size: 13px;
+    font-weight: 600;
+    color: #1a1a1a;
+}
+
+.form-group input {
+    width: 100%;
+    height: 42px;
+    background-color: #dcdcdc; /* Fondo gris claro idéntico */
+    border: none;
+    border-radius: 12px;
+    padding: 0 16px;
+    font-size: 14px;
+    color: #000000;
+    outline: none;
+}
+
+.form-group input:focus {
+    background-color: #d0d0d0;
+}
+
+/* Input con ícono de ojo para la contraseña */
+.input-password-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.input-password-wrapper input {
+    padding-right: 45px;
+}
+
+.toggle-password {
+    position: absolute;
+    right: 14px;
+    background: none;
+    border: none;
+    font-size: 16px;
+    color: #1a1a1a;
+    cursor: pointer;
+}
+
+/* Enlace de Registro */
+.register-text {
+    font-size: 13px;
+    font-weight: 600;
+    color: #000000;
+}
+
+.register-link {
+    color: #ff8c00;
+    text-decoration: underline;
+    font-weight: 700;
+}

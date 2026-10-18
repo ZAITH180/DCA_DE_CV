@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>D.C.A DE S.V - Registro</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+
+    <header class="navbar">
+        <div class="logo-container">
+            <img src="{{ url_for('static', filename='assets/logo.png') }}" alt="Logo D.C.A DE S.V" class="logo-icon">
+            <span class="brand-name">D.C.A DE S.V</span>
+        </div>
+    </header>
+
+    <main class="main-container">
+        <div class="card card-login">
+            <button type="button" class="btn-back" onclick="window.location.href='/login'">
+                <i class="fa-solid fa-chevron-left"></i>
+            </button>
+
+            <div class="card-logo">
+                <img src="{{ url_for('static', filename='assets/logo.png') }}" alt="Logo Principal">
+            </div>
+
+            <h1 class="card-title">Crea una cuenta nueva con tu<br>correo electrónico</h1>
+            
+            <form action="/register" method="POST" class="login-form">
+                <div class="form-group">
+                    <label for="username">Nombre de usuario</label>
+                    <input type="text" id="username" name="username" required autocomplete="off">
+                </div>
+
+                <div class="form-group">
+                    <label for="email">Correo electronico</label>
+                    <input type="email" id="email" name="email" required autocomplete="off">
+                </div>
+
+                <div class="form-group">
+                    <label for="password">Contraseña</label>
+                    <div class="input-password-wrapper">
+                        <input type="password" id="password" name="password" required>
+                        <button type="button" class="toggle-password" onclick="togglePasswordVisibility('password', 'eye-icon-1')">
+                            <i class="fa-regular fa-eye" id="eye-icon-1"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="confirm-password">Confirmar contraseña</label>
+                    <div class="input-password-wrapper">
+                        <input type="password" id="confirm-password" name="confirm_password" required>
+                        <button type="button" class="toggle-password" onclick="togglePasswordVisibility('confirm-password', 'eye-icon-2')">
+                            <i class="fa-regular fa-eye" id="eye-icon-2"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn btn-orange">Crear cuenta</button>
+            </form>
+        </div>
+
+        <footer class="terms-footer">
+            <label class="checkbox-container">
+                <input type="checkbox" id="terms" required>
+                <span class="custom-checkbox"></span>
+                <span class="terms-text">
+                    Al continuar, aceptas los terminos<br>
+                    y condiciones de <a href="#" class="brand-link">DEV’s<span class="orange-text">Service</span>C</a>
+                </span>
+            </label>
+        </footer>
+    </main>
+
+    <script>
+        // Lógica para mostrar/ocultar contraseña en ambos campos
+        function togglePasswordVisibility(inputId, iconId) {
+            const passwordInput = document.getElementById(inputId);
+            const eyeIcon = document.getElementById(iconId);
+            
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+                eyeIcon.classList.remove('fa-eye');
+                eyeIcon.classList.add('fa-eye-slash');
+            } else {
+                passwordInput.type = 'password';
+                eyeIcon.classList.remove('fa-eye-slash');
+                eyeIcon.classList.add('fa-eye');
+            }
+        }
+    </script>
+</body>
+</html>

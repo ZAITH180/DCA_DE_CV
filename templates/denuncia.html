@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>D.C.A DE S.V - Publicar Denuncia</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+
+    <header class="navbar">
+        <div class="logo-container">
+            <img src="{{ url_for('static', filename='assets/logo.png') }}" alt="Logo D.C.A DE S.V" class="logo-icon">
+            <span class="brand-name">D.C.A DE S.V</span>
+        </div>
+    </header>
+
+    <main class="main-container">
+        <div class="card" style="max-width: 850px; width: 100%; padding: 40px; position: relative;">
+            <a href="{{ url_for('index') }}" style="position: absolute; top: 20px; right: 25px; font-size: 24px; text-decoration: none; color: #000; font-weight: 600;">&times;</a>
+
+            <h1 class="card-title" style="text-align: left; font-size: 24px; margin-bottom: 5px;">Publica tu denuncia</h1>
+            <p class="card-subtitle" style="text-align: left; margin-bottom: 30px;">Llene los campos con la información de su denuncia</p>
+            
+            <form action="{{ url_for('exito') }}" method="POST" style="display: grid; grid-template-columns: 1fr 1fr; gap: 30px;">
+                <div>
+                    <label style="display: block; font-weight: 600; font-size: 14px; margin-bottom: 10px; color: #333;">Multimedia de Respaldo</label>
+                    <div style="border: 2px dashed #e0e0e0; border-radius: 12px; padding: 30px; text-align: center; background: #fafafa; margin-bottom: 25px;">
+                        <span style="font-size: 32px; display: block; margin-bottom: 8px;">🖼️</span>
+                        <span style="font-size: 13px; color: #666; font-weight: 500;">Adjuntar foto o Video</span>
+                    </div>
+
+                    <label style="display: block; font-weight: 600; font-size: 14px; margin-bottom: 10px; color: #333;">Marque en el mapa el lugar de la denuncia:</label>
+                    <div style="height: 160px; background: #eef2f5; border-radius: 12px; border: 1px solid #ddd;"></div>
+                </div>
+
+                <div>
+                    <label style="display: block; font-weight: 600; font-size: 14px; margin-bottom: 10px; color: #333;">Categoría del Reporte</label>
+                    <div style="border: 1px solid #ccc; border-radius: 8px; padding: 12px 15px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; color: #666; font-size: 14px;">
+                        <span>Seleccione su tipo de denuncia</span>
+                        <span>&lt;</span>
+                    </div>
+
+                    <label style="display: block; font-weight: 600; font-size: 14px; margin-bottom: 10px; color: #333;">Detalles del Suceso</label>
+                    <textarea placeholder="Describa su denuncia:" style="width: 100%; height: 130px; border: 1px solid #ccc; border-radius: 8px; padding: 12px; font-family: 'Montserrat', sans-serif; resize: none; margin-bottom: 25px; font-size: 14px;"></textarea>
+
+                    <button type="submit" class="btn btn-dark" style="width: 100%; display: block; text-align: center; border: none; cursor: pointer; padding: 12px; border-radius: 8px; font-weight: 600;">Publicar</button>
+                </div>
+            </form>
+        </div>
+    </main>
+
+    <script src="{{ url_for('serve_js', filename='main.js') }}"></script>
+</body>
+</html>

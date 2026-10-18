@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>D.C.A DE S.V - Notificaciones</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body style="background-color: #fafbfc; margin: 0; font-family: 'Montserrat', sans-serif;">
+
+    <main style="max-width: 650px; margin: 40px auto; padding: 0 20px;">
+        
+        <h1 style="font-size: 24px; font-weight: 700; color: #111; margin-bottom: 24px;">Notificaciones</h1>
+
+        <!-- Mensaje de estado vacío -->
+        <div style="background: #ffffff; border: 1px dashed #d0d5dd; border-radius: 12px; padding: 45px 20px; text-align: center; box-shadow: 0 2px 6px rgba(0,0,0,0.02);">
+            <p style="margin: 0; font-size: 14px; color: #666; font-weight: 500;">No hay notificaciones disponibles</p>
+        </div>
+
+        <!-- Enlace simplificado -->
+        <div style="margin-top: 25px;">
+            <a href="{{ url_for('muro') }}" style="color: #f98006; text-decoration: none; font-weight: 600; font-size: 13px;">
+                ← Volver
+            </a>
+        </div>
+
+    </main>
+
+</body>
+</html>

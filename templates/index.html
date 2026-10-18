@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>D.C.A DE S.V</title>
+    <!-- Fuente Google Fonts (Montserrat) -->
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Estilos desde static/css/style.css -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+
+    <!-- Encabezado superior -->
+    <header class="navbar">
+        <div class="logo-container">
+            <img src="{{ url_for('static', filename='assets/logo.png') }}" alt="Logo D.C.A DE S.V" class="logo-icon">
+            <span class="brand-name">D.C.A DE S.V</span>
+        </div>
+    </header>
+
+    <!-- Contenido principal -->
+    <main class="main-container">
+        <div class="card">
+            <div class="card-logo">
+                <img src="{{ url_for('static', filename='assets/logo.png') }}" alt="Logo Principal">
+            </div>
+
+            <h1 class="card-title">BIENVENIDO A D.C.A DE S.V</h1>
+            
+            <p class="card-subtitle">
+                Para mantener su privacidad, se le recomienda<br>
+                hacer sus denuncias de forma anónima.
+            </p>
+
+            <div class="button-group">
+               <a href="#" 
+                onclick="continuarAnonimo(); return false;" 
+             class="btn btn-orange" 
+              style="display: block; text-align: center; text-decoration: none; line-height: normal;">
+              Continuar de forma anónima
+              </a>
+
+             <a href="#" 
+               onclick="continuarCorreo(); return false;" 
+                class="btn btn-dark" 
+                style="display: block; text-align: center; text-decoration: none; line-height: normal;">
+                Continuar con correo electrónico
+             </a>
+          </div>
+        </div>
+
+        <!-- Footer con Checkbox y Términos -->
+        <footer class="terms-footer">
+            <label class="checkbox-container">
+                <input type="checkbox" id="terms">
+                <span class="custom-checkbox"></span>
+                <span class="terms-text">
+                    Al continuar, aceptas los terminos<br>
+                    y condiciones de <a href="#" class="brand-link">DEV’s<span class="orange-text">Service</span>C</a>
+                </span>
+            </label>
+        </footer>
+    </main>
+
+    <!-- Script JS vinculado dinámicamente -->
+  <script src="{{ url_for('serve_js', filename='main.js') }}?v=2"></script>
+</body>
+</html>
