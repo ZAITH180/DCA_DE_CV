@@ -55,9 +55,15 @@
                 <button type="submit" class="btn btn-orange">Iniciar sesión</button>
             </form>
 
-            <p class="register-text">
-                ¿No tienes cuenta? Regístrate <a href="/register" class="register-link">aquí</a>
-            </p>
+            <!-- Textos de registro y recuperación -->
+            <div style="text-align: center; margin-top: 15px;">
+                <p class="register-text" style="margin-bottom: 8px;">
+                    ¿No tienes cuenta? Regístrate <a href="/register" class="register-link">aquí</a>
+                </p>
+                <p class="register-text">
+                    ¿Olvidaste la contraseña? Recupérala <a href="/recuperar" class="register-link">aquí</a>
+                </p>
+            </div>
         </div>
 
         <!-- Footer con Checkbox y Términos -->
@@ -73,7 +79,7 @@
         </footer>
     </main>
 
-    <script src="{{ url_for('static', filename='../js/main.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
     <script>
         // Lógica para mostrar/ocultar contraseña
         function togglePasswordVisibility() {

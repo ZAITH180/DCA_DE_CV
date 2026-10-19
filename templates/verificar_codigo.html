@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>D.C.A DE S.V - Verificar código</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <header class="navbar">
+        <div class="logo-container">
+            <img src="{{ url_for('static', filename='assets/logo.png') }}" alt="Logo" class="logo-icon">
+            <span class="brand-name">D.C.A DE S.V</span>
+        </div>
+    </header>
+
+    <main class="main-container">
+        <div class="card card-login">
+            <button type="button" class="btn-back" onclick="window.location.href='/recuperar'">
+                <i class="fa-solid fa-chevron-left"></i>
+            </button>
+
+            <div class="card-logo">
+                <img src="{{ url_for('static', filename='assets/logo.png') }}" alt="Logo Principal">
+            </div>
+
+            <h1 class="card-title" style="margin-bottom: 25px;">Ingresa el código de recuperación</h1>
+            
+            <form action="/cambiar-pass" method="GET" class="login-form">
+                <div class="form-group">
+                    <label for="codigo">Ingresa el código de recuperación enviado a tu correo electrónico</label>
+                    <input type="text" id="codigo" name="codigo" required autocomplete="off">
+                </div>
+
+                <button type="submit" class="btn btn-orange" style="margin-top: 15px;">Verificar</button>
+            </form>
+        </div>
+    </main>
+</body>
+</html>

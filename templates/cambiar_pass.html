@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>D.C.A DE S.V - Cambiar contraseña</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <header class="navbar">
+        <div class="logo-container">
+            <img src="{{ url_for('static', filename='assets/logo.png') }}" alt="Logo" class="logo-icon">
+            <span class="brand-name">D.C.A DE S.V</span>
+        </div>
+    </header>
+
+    <main class="main-container">
+        <div class="card card-login">
+            <button type="button" class="btn-back" onclick="window.location.href='/verificar-codigo'">
+                <i class="fa-solid fa-chevron-left"></i>
+            </button>
+
+            <div class="card-logo">
+                <img src="{{ url_for('static', filename='assets/logo.png') }}" alt="Logo Principal">
+            </div>
+
+            <h1 class="card-title" style="margin-bottom: 25px;">Cambiar contraseña</h1>
+            
+            <form action="/login" method="GET" class="login-form">
+                <div class="form-group">
+                    <label for="new-password">Nueva contraseña</label>
+                    <input type="password" id="new-password" name="new-password" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="confirm-password">Comprueba Contraseña</label>
+                    <input type="password" id="confirm-password" name="confirm-password" required>
+                </div>
+
+                <button type="submit" class="btn btn-orange" style="margin-top: 15px;">Aceptar</button>
+            </form>
+        </div>
+    </main>
+</body>
+</html>

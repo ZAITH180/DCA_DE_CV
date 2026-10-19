@@ -38,5 +38,18 @@ def perfil():
 def notificaciones():
     return render_template('notificaciones.html')
 
+# Nuevas rutas para el flujo de recuperación de contraseña
+@app.route('/recuperar')
+def recuperar():
+    return render_template('recuperar_pass.html')
+
+@app.route('/verificar-codigo')
+def verificar_codigo():
+    return render_template('verificar_codigo.html')
+
+@app.route('/cambiar-pass')
+def cambiar_pass():
+    return render_template('cambiar_pass.html')
+
 if __name__ == '__main__':
     app.run(debug=True)
