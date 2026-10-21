@@ -1,22 +1,19 @@
-function verificarTerminos() {
-    const termsCheckbox = document.getElementById('terms');
-    if (!termsCheckbox.checked) {
-        alert("Por favor, acepta los términos y condiciones para continuar.");
-        return false;
-    }
-    return true;
-}
+document.addEventListener("DOMContentLoaded", function() {
+    // Seleccionar todos los botones dentro de la barra de filtros del muro
+    const botonesFiltro = document.querySelectorAll("main div div button");
 
-function continuarAnonimo() {
-    if (verificarTerminos()) {
-        // Redirección añadida a la vista de reporte anónimo
-        window.location.href = '/denuncia';
-    }
-}
+    botonesFiltro.forEach(boton => {
+        const texto = boton.textContent.trim().toLowerCase();
+        
+        boton.addEventListener("click", function() {
+            let filtro = 'en_proceso';
+            if (texto.includes('todos')) filtro = 'todos';
+            else if (texto.includes('recientes')) filtro = 'recientes';
+            else if (texto.includes('proceso')) filtro = 'en_proceso';
+            else if (texto.includes('cerradas')) filtro = 'cerradas';
 
-function continuarCorreo() {
-    if (verificarTerminos()) {
-        // Redirige a la pantalla de login
-        window.location.href = '/login';
-    }
-}
+            // Redirigir a la ruta del muro con el filtro seleccionado
+            window.location.href = `/muro?filtro=${filtro}`;
+        });
+    });
+});

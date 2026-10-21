@@ -1,14 +1,20 @@
 from flask import Flask, render_template, request, redirect, url_for, flash, session, send_from_directory
 import pymysql
+import random
 from werkzeug.security import generate_password_hash, check_password_hash
+from werkzeug.utils import secure_filename
 import os
 
 app = Flask(__name__)
 app.secret_key = 'tu_clave_secreta_super_segura'
 
+# Carpeta para archivos multimedia subidos
+UPLOAD_FOLDER = os.path.join(app.root_path, 'static', 'uploads')
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+
 # Configuración de la base de datos con PyMySQL (XAMPP)
 def get_db_connection():
-    connection = pymysql.connect(
+    return pymysql.connect(
         host='localhost',
         user='root',
         password='',
@@ -16,19 +22,18 @@ def get_db_connection():
         charset='utf8mb4',
         cursorclass=pymysql.cursors.DictCursor
     )
-    return connection
 
-# Ruta Auxiliar para servir los scripts JS referenciados como url_for('serve_js', filename='...')
+# Servir scripts JS
 @app.route('/js/<path:filename>')
 def serve_js(filename):
     return send_from_directory(os.path.join(app.root_path, 'static', 'js'), filename)
 
-# Ruta Principal / Login inicial
+# Ruta Principal / Login
 @app.route('/')
 def index():
     return render_template('login.html')
 
-# 1. REGISTRO (Adaptado a register.html)
+# 1. REGISTRO
 @app.route('/register', methods=['GET', 'POST'])
 def register():
     if request.method == 'POST':
@@ -47,9 +52,7 @@ def register():
             conn = get_db_connection()
             with conn.cursor() as cursor:
                 cursor.execute("SELECT * FROM usuarios WHERE correo = %s", (correo,))
-                user = cursor.fetchone()
-                
-                if user:
+                if cursor.fetchone():
                     flash('El correo ya está registrado.', 'danger')
                     return redirect(url_for('register'))
                 
@@ -66,7 +69,7 @@ def register():
         
     return render_template('register.html')
 
-# 2. INICIO DE SESIÓN (Adaptado a login.html)
+# 2. INICIO DE SESIÓN
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
@@ -89,33 +92,55 @@ def login():
             
     return render_template('login.html')
 
-# 3. RECUPERAR CONTRASEÑA (Adaptado a recuperar_pass.html)
+# 3. RECUPERAR CONTRASEÑA
 @app.route('/recuperar', methods=['GET', 'POST'])
 def recuperar():
     if request.method == 'POST' or request.method == 'GET':
         correo = request.args.get('email') or request.form.get('email')
-        
         if correo:
             conn = get_db_connection()
             with conn.cursor() as cursor:
                 cursor.execute("SELECT * FROM usuarios WHERE correo = %s", (correo,))
                 user = cursor.fetchone()
-            conn.close()
             
             if user:
+                codigo_aleatorio = str(random.randint(100000, 999999))
+                with conn.cursor() as cursor:
+                    cursor.execute("UPDATE usuarios SET codigo_recuperacion = %s WHERE correo = %s", (codigo_aleatorio, correo))
+                    conn.commit()
+                conn.close()
+                
+                print(f"\n [CÓDIGO DE RECUPERACIÓN]: {codigo_aleatorio} para {correo}\n")
                 session['correo_recuperacion'] = correo
                 return redirect(url_for('verificar_codigo'))
             else:
+                conn.close()
                 flash('El correo no se encuentra registrado.', 'danger')
                 
     return render_template('recuperar_pass.html')
 
-# 4. VERIFICAR CÓDIGO
-@app.route('/verificar-codigo')
+@app.route('/verificar-codigo', methods=['GET', 'POST'])
 def verificar_codigo():
+    if request.method == 'POST':
+        codigo_ingresado = request.form.get('codigo')
+        correo = session.get('correo_recuperacion')
+        
+        if correo:
+            conn = get_db_connection()
+            with conn.cursor() as cursor:
+                cursor.execute("SELECT codigo_recuperacion FROM usuarios WHERE correo = %s", (correo,))
+                resultado = cursor.fetchone()
+            conn.close()
+            
+            if resultado and resultado['codigo_recuperacion'] == codigo_ingresado:
+                return redirect(url_for('cambiar_pass'))
+            else:
+                flash('Código incorrecto.', 'danger')
+        else:
+            return redirect(url_for('recuperar'))
+            
     return render_template('verificar_codigo.html')
 
-# 5. CAMBIAR CONTRASEÑA (Adaptado a cambiar_pass.html)
 @app.route('/cambiar-pass', methods=['GET', 'POST'])
 def cambiar_pass():
     if request.method == 'POST':
@@ -127,29 +152,75 @@ def cambiar_pass():
             return redirect(url_for('cambiar_pass'))
             
         correo = session.get('correo_recuperacion')
-        
         if correo:
             hashed_password = generate_password_hash(nueva_password)
             conn = get_db_connection()
             with conn.cursor() as cursor:
-                cursor.execute("UPDATE usuarios SET password = %s WHERE correo = %s", (hashed_password, correo))
+                cursor.execute("UPDATE usuarios SET password = %s, codigo_recuperacion = NULL WHERE correo = %s", (hashed_password, correo))
                 conn.commit()
             conn.close()
-            
             session.pop('correo_recuperacion', None)
-            flash('Contraseña actualizada con éxito.', 'success')
             return redirect(url_for('login'))
-        else:
-            flash('Sesión de recuperación expirada o correo no válido.', 'danger')
-            return redirect(url_for('recuperar'))
             
     return render_template('cambiar_pass.html')
 
-# 6. RUTAS SECUNDARIAS DE LA APLICACIÓN
+# 4. MURO (Con soporte para filtros: Todos, Recientes, En proceso, Cerradas)
 @app.route('/muro')
 def muro():
-    return render_template('muro.html')
+    filtro = request.args.get('filtro', 'en_proceso') # Por defecto muestra 'En proceso'
+    
+    conn = get_db_connection()
+    with conn.cursor() as cursor:
+        if filtro == 'todos':
+            cursor.execute("SELECT * FROM denuncias ORDER BY id DESC")
+        elif filtro == 'recientes':
+            cursor.execute("SELECT * FROM denuncias ORDER BY fecha DESC LIMIT 5")
+        elif filtro == 'cerradas':
+            cursor.execute("SELECT * FROM denuncias WHERE estado = 'Cerrada' ORDER BY id DESC")
+        else: # 'en_proceso'
+            cursor.execute("SELECT * FROM denuncias WHERE estado = 'En proceso' ORDER BY id DESC")
+            
+        denuncias = cursor.fetchall()
+    conn.close()
+    
+    return render_template('muro.html', denuncias=denuncias, filtro_actual=filtro)
+# 5. VER PÁGINA DE PUBLICACIÓN DE DENUNCIA
+@app.route('/denuncia')
+def denuncia():
+    return render_template('denuncia.html')
 
+# 6. REGISTRAR DENUNCIA (Ruta 'exito' ejecutada al presionar Publicar)
+@app.route('/exito', methods=['GET', 'POST'])
+def exito():
+    if request.method == 'POST':
+        usuario_id = session.get('user_id')
+        
+        # Extracción de campos enviados desde el formulario (se captura cualquier name o valor por defecto)
+        categoria = request.form.get('categoria') or request.form.get('tipo_denuncia') or 'General'
+        descripcion = request.form.get('descripcion') or request.form.get('detalles') or 'Sin descripción proporcionada'
+        ubicacion = request.form.get('ubicacion') or request.form.get('mapa') or 'Ubicación no especificada'
+        
+        # Manejo de archivo subido (Foto o Video)
+        filename = None
+        file = request.files.get('multimedia') or request.files.get('archivo')
+        if file and file.filename != '':
+            filename = secure_filename(file.filename)
+            os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
+            file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+        
+        # Guardado en base de datos
+        conn = get_db_connection()
+        with conn.cursor() as cursor:
+            cursor.execute("""
+                INSERT INTO denuncias (usuario_id, categoria, descripcion, multimedia, ubicacion, estado) 
+                VALUES (%s, %s, %s, %s, %s, 'En proceso')
+            """, (usuario_id, categoria, descripcion, filename, ubicacion))
+            conn.commit()
+        conn.close()
+        
+    return render_template('exito.html')
+
+# Rutas secundarias
 @app.route('/notificaciones')
 def notificaciones():
     return render_template('notificaciones.html')
@@ -161,14 +232,6 @@ def perfil():
 @app.route('/configuracion')
 def configuracion():
     return render_template('configuracion.html')
-
-@app.route('/denuncia')
-def denuncia():
-    return render_template('denuncia.html')
-
-@app.route('/exito')
-def exito():
-    return render_template('exito.html')
 
 @app.route('/logout')
 def logout():
