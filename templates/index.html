@@ -62,8 +62,6 @@
             </label>
         </footer>
     </main>
-
-    <!-- Script JS vinculado dinámicamente -->
-  <script src="{{ url_for('serve_js', filename='main.js') }}?v=2"></script>
+<script src="{{ url_for('static', filename='js/main.js') }}"></script>
 </body>
 </html>

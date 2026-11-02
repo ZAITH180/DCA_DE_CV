@@ -27,6 +27,22 @@
                 <i class="fa-solid fa-chevron-left"></i>
             </button>
 
+            <!-- ========================================== -->
+            <!-- MENSAJES DE ALERTA (FLASH) AÑADIDOS AQUÍ -->
+            <!-- ========================================== -->
+            {% with messages = get_flashed_messages(with_categories=true) %}
+              {% if messages %}
+                {% for category, message in messages %}
+                  <div style="padding: 10px; margin-bottom: 15px; border-radius: 5px; text-align: center; 
+                              background-color: {{ '#f8d7da' if category == 'error' else '#d4edda' }}; 
+                              color: {{ '#721c24' if category == 'error' else '#155724' }};">
+                    {{ message }}
+                  </div>
+                {% endfor %}
+              {% endif %}
+            {% endwith %}
+            <!-- ========================================== -->
+
             <div class="card-logo">
                 <img src="{{ url_for('static', filename='assets/logo.png') }}" alt="Logo Principal">
             </div>
