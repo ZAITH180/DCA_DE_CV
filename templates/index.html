@@ -4,14 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>D.C.A DE S.V</title>
-    <!-- Fuente Google Fonts (Montserrat) -->
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <!-- Estilos desde static/css/style.css -->
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
-</head>
+
+ 
 <body>
 
-    <!-- Encabezado superior -->
     <header class="navbar">
         <div class="logo-container">
             <img src="{{ url_for('static', filename='assets/logo.png') }}" alt="Logo D.C.A DE S.V" class="logo-icon">
@@ -19,7 +17,6 @@
         </div>
     </header>
 
-    <!-- Contenido principal -->
     <main class="main-container">
         <div class="card">
             <div class="card-logo">
@@ -50,14 +47,14 @@
           </div>
         </div>
 
-        <!-- Footer con Checkbox y Términos -->
         <footer class="terms-footer">
             <label class="checkbox-container">
                 <input type="checkbox" id="terms">
                 <span class="custom-checkbox"></span>
                 <span class="terms-text">
                     Al continuar, aceptas los terminos<br>
-                    y condiciones de <a href="#" class="brand-link">DEV’s<span class="orange-text">Service</span>C</a>
+                    <!-- ENLACE CORREGIDO AQUÍ -->
+                    y condiciones de <a href="{{ url_for('terminos') }}" class="brand-link">DEV’s<span class="orange-text">Service</span>C</a>
                 </span>
             </label>
         </footer>

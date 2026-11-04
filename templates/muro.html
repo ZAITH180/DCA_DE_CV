@@ -6,6 +6,61 @@
     <title>D.C.A DE S.V - Muro de Denuncias</title>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <style>
+        .grid-denuncias {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 25px;
+            margin-top: 20px;
+        }
+        .card-denuncia {
+            background: #ffffff;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            border: 1px solid #eef0f2;
+            display: flex;
+            flex-direction: column;
+            transition: transform 0.2s;
+        }
+        .card-denuncia:hover {
+            transform: translateY(-5px);
+        }
+        .card-imagen {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            background-color: #eef2f5;
+        }
+        .card-contenido {
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            flex-grow: 1;
+        }
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+        .badge-estado {
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: capitalize;
+        }
+        .estado-reciente { background-color: #ffeb3b; color: #000; }
+        .estado-proceso { background-color: #2962ff; color: #fff; }
+        .estado-cerrada { background-color: #ff9800; color: #fff; }
+        
+        .card-fecha { color: #999; font-size: 12px; }
+        .card-titulo { font-size: 15px; color: #333; margin: 0 0 10px 0; line-height: 1.4; }
+        .card-titulo span { font-weight: 700; }
+        .card-desc { color: #666; font-size: 13px; line-height: 1.5; margin: 0; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+    </style>
+
 </head>
 <body style="background-color: #fafbfc; margin: 0; font-family: 'Montserrat', sans-serif;">
 
@@ -16,16 +71,11 @@
             <span style="font-weight: 700; font-size: 16px; color: #000;">D.C.A DE S.V</span>
         </div>
         <div style="display: flex; align-items: center; gap: 20px;">
-            
-            <!-- Botón de Cerrar Sesión -->
             <a href="{{ url_for('logout') }}" style="text-decoration: none; color: #f98006; font-size: 13px; font-weight: 600;">Cerrar Sesión</a>
-
-            <!-- Icono de Notificaciones -->
             <a href="{{ url_for('notificaciones') }}" style="position: relative; cursor: pointer; display: flex; align-items: center; text-decoration: none;">
                 <img src="{{ url_for('static', filename='assets/Notificaciones.png') }}" alt="Notificaciones" style="width: 24px; height: 24px;">
                 <span style="position: absolute; top: -5px; right: -5px; background: #f98006; color: white; font-size: 9px; padding: 1px 5px; border-radius: 50%; font-weight: bold;">1</span>
             </a>
-            <!-- Icono de Perfil -->
             <a href="{{ url_for('perfil') }}" style="cursor: pointer; display: flex; align-items: center; text-decoration: none;">
                 <img src="{{ url_for('static', filename='assets/image 11.png') }}" alt="Perfil" style="width: 38px; height: 38px; border-radius: 50%; object-fit: cover;">
             </a>
@@ -33,68 +83,87 @@
     </header>
 
     <!-- Contenedor Principal -->
-    <main style="max-width: 1300px; margin: 30px auto; padding: 0 40px;">
+    <main style="max-width: 1200px; margin: 30px auto; padding: 0 40px;">
         
-        <!-- Filtros y botón de agregar -->
+        <!-- Filtros y Botón + -->
         <div style="display: flex; align-items: center; justify-content: flex-start; gap: 15px; margin-bottom: 35px; width: 100%;">
+            
+            <!-- BOTONES DE FILTRO -->
             <div style="background: #ffffff; padding: 5px; border-radius: 30px; display: flex; gap: 4px; box-shadow: 0 2px 6px rgba(0,0,0,0.04); border: 1px solid #eef0f2;">
-                <button style="border: none; background: transparent; color: #666; padding: 8px 22px; border-radius: 20px; font-weight: 600; cursor: pointer; font-size: 13px;">Todos</button>
-                <button style="border: none; background: transparent; color: #666; padding: 8px 22px; border-radius: 20px; font-weight: 600; cursor: pointer; font-size: 13px;">Recientes</button>
-                <button style="border: none; background: #f98006; color: white; padding: 8px 22px; border-radius: 20px; font-weight: 600; cursor: pointer; font-size: 13px;">En proceso</button>
-                <button style="border: none; background: transparent; color: #666; padding: 8px 22px; border-radius: 20px; font-weight: 600; cursor: pointer; font-size: 13px;">Cerradas</button>
+                <a href="{{ url_for('muro', filtro='Todos') }}" 
+                   style="text-decoration: none; border: none; padding: 8px 22px; border-radius: 20px; font-weight: 600; font-size: 13px;
+                          background: {{ '#f98006' if filtro_activo == 'Todos' else 'transparent' }}; 
+                          color: {{ 'white' if filtro_activo == 'Todos' else '#666' }};">
+                    Todos
+                </a>
+                <a href="{{ url_for('muro', filtro='Recientes') }}" 
+                   style="text-decoration: none; border: none; padding: 8px 22px; border-radius: 20px; font-weight: 600; font-size: 13px;
+                          background: {{ '#f98006' if filtro_activo == 'Recientes' else 'transparent' }}; 
+                          color: {{ 'white' if filtro_activo == 'Recientes' else '#666' }};">
+                    Recientes
+                </a>
+                <a href="{{ url_for('muro', filtro='En Proceso') }}" 
+                   style="text-decoration: none; border: none; padding: 8px 22px; border-radius: 20px; font-weight: 600; font-size: 13px;
+                          background: {{ '#f98006' if filtro_activo == 'En Proceso' else 'transparent' }}; 
+                          color: {{ 'white' if filtro_activo == 'En Proceso' else '#666' }};">
+                    En proceso
+                </a>
+                <a href="{{ url_for('muro', filtro='Cerradas') }}" 
+                   style="text-decoration: none; border: none; padding: 8px 22px; border-radius: 20px; font-weight: 600; font-size: 13px;
+                          background: {{ '#f98006' if filtro_activo == 'Cerradas' else 'transparent' }}; 
+                          color: {{ 'white' if filtro_activo == 'Cerradas' else '#666' }};">
+                    Cerradas
+                </a>
             </div>
 
-            <!-- Botón + para ir a crear denuncia -->
             <a href="{{ url_for('denuncia') }}" style="width: 40px; height: 40px; background: #ffffff; border-radius: 50%; display: flex; align-items: center; justify-content: center; text-decoration: none; color: #000; font-size: 22px; font-weight: bold; box-shadow: 0 2px 6px rgba(0,0,0,0.06); border: 1px solid #eef0f2;">
                 +
             </a>
         </div>
 
-        <!-- Saludo Personalizado -->
-        <h2 style="font-size: 22px; font-weight: 600; margin-bottom: 20px; color: #333;">
-            Hola, {{ nombre }}. Bienvenido a tu muro.
-        </h2>
-
-        <!-- LISTA DE DENUNCIAS DINÁMICA -->
-        <div style="display: flex; flex-direction: column; gap: 20px;">
+        <!-- LISTA DE DENUNCIAS EN FORMATO GALERÍA -->
+        <div class="grid-denuncias">
             {% if denuncias %}
                 {% for d in denuncias %}
-                    <div style="background: #ffffff; border: 1px solid #eef0f2; border-radius: 16px; padding: 20px; box-shadow: 0 2px 6px rgba(0,0,0,0.02);">
+                    <div class="card-denuncia">
                         
-                        <!-- Cabecera de la tarjeta -->
-                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
-                            <span style="background: #f98006; color: white; padding: 4px 12px; border-radius: 20px; font-size: 11px; font-weight: 600; text-transform: uppercase;">{{ d.categoria }}</span>
-                            <span style="color: #999; font-size: 12px;">{{ d.fecha.strftime('%d/%m/%Y %H:%M') if d.fecha else '' }}</span>
-                        </div>
-
-                        <!-- Descripción -->
-                        <p style="color: #333; font-size: 14px; margin: 0 0 15px 0; line-height: 1.5;">{{ d.descripcion }}</p>
-                        
-                        <!-- Imagen de respaldo (si existe) -->
                         {% if d.ruta_imagen %}
-                            <img src="{{ url_for('static', filename='uploads/' + d.ruta_imagen) }}" alt="Evidencia" style="max-width: 100%; max-height: 300px; border-radius: 8px; object-fit: cover; margin-bottom: 15px; display: block;">
+                            <img src="{{ url_for('static', filename='uploads/' + d.ruta_imagen) }}" alt="Evidencia" class="card-imagen">
+                        {% else %}
+                            <div class="card-imagen" style="background-color: #1a1a1a;"></div>
                         {% endif %}
 
-                        <!-- Ubicación (si existe) -->
-                        {% if d.latitud and d.longitud %}
-                            <a href="https://www.google.com/maps?q={{ d.latitud }},{{ d.longitud }}" target="_blank" style="display: inline-flex; align-items: center; gap: 5px; font-size: 12px; color: #f98006; text-decoration: none; font-weight: 600;">
-                                📍 Ver ubicación en Google Maps
-                            </a>
-                        {% endif %}
-                        
+                        <div class="card-contenido">
+                            <div class="card-header">
+                                <span class="badge-estado 
+                                    {% if d.estado == 'Reciente' %}estado-reciente
+                                    {% elif d.estado == 'En Proceso' %}estado-proceso
+                                    {% else %}estado-cerrada{% endif %}">
+                                    {{ d.estado }}
+                                </span>
+                                <span class="card-fecha">{{ d.fecha.strftime('%d/%m/%Y') if d.fecha else '' }}</span>
+                            </div>
+
+                            <p class="card-titulo">Denuncia por: <span>{{ d.categoria }}</span></p>
+                            <p class="card-desc">{{ d.descripcion }}</p>
+                            
+                            {% if d.latitud and d.longitud %}
+                                <a href="https://www.google.com/maps?q={{ d.latitud }},{{ d.longitud }}" target="_blank" style="margin-top: 15px; font-size: 12px; color: #f98006; text-decoration: none; font-weight: 600; display: inline-block;">
+                                    📍 Ver ubicación
+                                </a>
+                            {% endif %}
+                        </div>
                     </div>
                 {% endfor %}
             {% else %}
-                <!-- Mensaje si no hay denuncias -->
-                <div style="min-height: 200px; display: flex; align-items: center; justify-content: center; border: 2px dashed #e0e0e0; border-radius: 16px;">
-                    <p style="color: #888; font-size: 14px; font-weight: 500;">Aún no has publicado ninguna denuncia.</p>
+                <div style="grid-column: 1 / -1; min-height: 200px; display: flex; align-items: center; justify-content: center; border: 2px dashed #e0e0e0; border-radius: 16px;">
+                    <p style="color: #888; font-size: 14px; font-weight: 500;">No hay denuncias en esta categoría.</p>
                 </div>
             {% endif %}
         </div>
 
     </main>
 
-    <!-- Ruta del script corregida -->
     <script src="{{ url_for('static', filename='js/main.js') }}"></script>
 </body>
 </html>

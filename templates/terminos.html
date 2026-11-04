@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>D.C.A DE S.V - Términos y Condiciones</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    
+    <!-- Script global del Modo Oscuro -->
+    <script>
+        if (localStorage.getItem('theme') === 'dark') {
+            document.documentElement.classList.add('dark-mode-html');
+            document.addEventListener('DOMContentLoaded', () => {
+                document.body.classList.add('dark-mode');
+            });
+        }
+    </script>
+    <style>
+        html.dark-mode-html { background-color: #121212 !important; }
+        
+        /* Estilos específicos para el documento legal */
+        .documento-legal {
+            background: #ffffff;
+            max-width: 800px;
+            margin: 40px auto;
+            padding: 50px 60px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            border: 1px solid #eaeaea;
+            line-height: 1.6;
+            font-size: 14px;
+            color: #333;
+        }
+        .documento-legal h1 {
+            font-size: 22px;
+            text-align: center;
+            margin-bottom: 5px;
+            color: #111;
+        }
+        .documento-legal .subtitulo {
+            text-align: center;
+            color: #666;
+            font-size: 13px;
+            margin-bottom: 30px;
+        }
+        .documento-legal h2 {
+            font-size: 15px;
+            color: #111;
+            margin-top: 30px;
+            margin-bottom: 12px;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 5px;
+            font-weight: 700;
+        }
+        .documento-legal p {
+            margin-bottom: 15px;
+            text-align: justify;
+        }
+        .documento-legal ul {
+            margin-bottom: 15px;
+            padding-left: 25px;
+        }
+        .documento-legal li {
+            margin-bottom: 8px;
+            text-align: justify;
+        }
+        .documento-legal .alerta {
+            background-color: #fff3e0;
+            border-left: 4px solid #f98006;
+            padding: 15px;
+            margin: 25px 0;
+            font-weight: 500;
+            font-size: 13px;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header con botón de volver -->
+    <header style="background: #ffffff; padding: 18px 40px; display: flex; align-items: center; border-bottom: 1px solid #eaeaea;">
+        <a href="{{ url_for('index') }}" style="display: flex; align-items: center; gap: 8px; text-decoration: none; color: #000; font-weight: 600; font-size: 14px;">
+            <span style="font-size: 18px;">‹</span> Volver al inicio
+        </a>
+    </header>
+
+    <main class="documento-legal">
+        <h1>D.CA de S.V.</h1>
+        <p class="subtitulo">
+            TÉRMINOS Y CONDICIONES DE USO<br>
+            Aplicación para recepción y seguimiento de reportes o denuncias<br>
+            Jurisdicción prevista: República de El Salvador | Versión preliminar: 13 de octubre de 2026
+        </p>
+
+        <div class="alerta">
+            <strong>IMPORTANTE:</strong> Este documento es un modelo para un proyecto académico o una futura implementación. No sustituye asesoría legal. Antes de publicarlo, el equipo responsable debe confirmar la identidad del operador, los canales oficiales, las medidas técnicas reales, los plazos de conservación y la normativa vigente con una persona profesional del derecho en El Salvador.
+        </div>
+
+        <h2>1. Aceptación de los términos</h2>
+        <p>Estos Términos y Condiciones regulan el acceso y uso de D.CA de S.V. (en adelante, “la Aplicación”), una herramienta digital proyectada para recibir reportes sobre hechos que una persona considera irregulares, riesgosos o posiblemente ilícitos, y facilitar su organización y eventual remisión al equipo o entidad competente.</p>
+        <p>Al marcar “Acepto los términos y condiciones” y continuar, la persona usuaria declara que ha leído este documento, comprende el tratamiento de información descrito y acepta utilizar la Aplicación de forma lícita y responsable. Si no está de acuerdo, debe abstenerse de enviar reportes.</p>
+        <p>La aceptación de estos términos no convierte automáticamente un reporte en una denuncia formal ante la Fiscalía General de la República (FGR), la Policía Nacional Civil (PNC), un juzgado u otra autoridad. La Aplicación solo podrá afirmar que remitió un caso a una institución cuando exista un procedimiento real de remisión y una constancia verificable.</p>
+
+        <h2>2. Identificación del responsable y alcance del servicio</h2>
+        <p><strong>Responsable del servicio:</strong> [NOMBRE DE LA PERSONA, ORGANIZACIÓN O ENTIDAD RESPONSABLE].</p>
+        <p><strong>Contacto para privacidad y soporte:</strong> [CORREO ELECTRÓNICO OFICIAL] / [CANAL DE CONTACTO].</p>
+        <p><strong>Versión y fecha de vigencia:</strong> [VERSIÓN] / [FECHA DE PUBLICACIÓN].</p>
+        <p>Antes de lanzar la Aplicación, estos campos deben completarse. El responsable deberá informar si actúa como entidad pública, organización privada, proyecto universitario u otro tipo de operador, y describir con precisión quién recibe, revisa y decide el destino de los reportes.</p>
+        <p>D.CA de S.V. no debe presentarse como una autoridad investigadora, fiscalía, policía ni servicio de emergencias, salvo que exista autorización y competencia legal para ello. La Aplicación no sustituye los canales oficiales ni garantiza que un reporte produzca una investigación, sanción o resultado específico.</p>
+
+        <h2>3. Definiciones</h2>
+        <ul>
+            <li><strong>Persona usuaria:</strong> quien accede a la Aplicación, con o sin registro tradicional.</li>
+            <li><strong>Token anónimo:</strong> código aleatorio que permite reconocer una sesión o recuperar el acceso a un reporte sin utilizar, por sí solo, el nombre real de la persona.</li>
+            <li><strong>Reporte:</strong> información enviada mediante la Aplicación sobre hechos observados, conocidos o sospechados.</li>
+            <li><strong>Denuncia formal:</strong> comunicación realizada ante una autoridad competente conforme a las leyes y procedimientos aplicables. Un reporte dentro de la Aplicación no necesariamente equivale a una denuncia formal.</li>
+            <li><strong>Datos personales:</strong> información que identifica o puede hacer identificable a una persona, directa o indirectamente, incluyendo identificadores técnicos cuando puedan vincularse a alguien.</li>
+        </ul>
+
+        <h2>4. Modalidades de acceso: anónimo y registro tradicional</h2>
+        <p><strong>4.1 Acceso anónimo</strong><br>La modalidad anónima está diseñada para permitir el uso sin solicitar de forma ordinaria nombre, DUI, número telefónico, correo electrónico ni otros datos de identidad. El sistema puede generar un token aleatorio y mostrarlo una sola vez o permitir guardarlo de forma segura. El token no debe incluir datos personales codificados ni derivarse de información del dispositivo.</p>
+        <p>El token puede utilizarse para consultar el estado de un reporte o recibir mensajes dentro de la Aplicación, siempre que esas funciones se implementen. El token no garantiza anonimato absoluto: el contenido escrito por la persona, los archivos adjuntos, los metadatos, los registros técnicos o circunstancias descritas podrían permitir inferir su identidad.</p>
+        <p>La persona usuaria debe guardar el token de manera segura y no compartirlo. Si lo pierde, la recuperación podría ser imposible sin una función adicional; el equipo no debe prometer recuperación si técnicamente no existe.</p>
+        <p><strong>4.2 Registro tradicional</strong><br>Si se ofrece registro tradicional, la Aplicación debe explicar antes de recopilar datos qué campos son obligatorios, para qué se utilizan, quién tendrá acceso, cuánto tiempo se conservarán y cómo ejercer los derechos que correspondan. No deben solicitarse datos que no sean necesarios para la finalidad declarada.</p>
+        <p>El registro tradicional no debe mezclarse con la modalidad anónima de forma que se vincule automáticamente la identidad con un reporte anónimo, salvo que la persona lo solicite de manera clara o exista una base jurídica válida y debidamente informada.</p>
+
+        <h2>5. Información que la Aplicación puede almacenar</h2>
+        <p>Según las funciones efectivamente implementadas, la Aplicación podrá almacenar únicamente lo necesario para operar y atender los reportes. Antes del lanzamiento debe aprobarse un inventario de datos y una política de conservación. Las categorías previstas pueden incluir:</p>
+        <ul>
+            <li>El contenido del reporte: descripción, fecha aproximada, lugar o zona del hecho, categoría y estado de gestión.</li>
+            <li>Archivos que la persona decida adjuntar, como fotografías o documentos, después de advertirle que pueden contener rostros, nombres, ubicaciones, metadatos u otra información personal.</li>
+            <li>Un identificador aleatorio del reporte y, cuando corresponda, el token anónimo o su versión protegida mediante técnicas de seguridad.</li>
+            <li>Datos mínimos de operación y seguridad, como fecha de envío, eventos de acceso, errores y registros técnicos indispensables para prevenir abuso y mantener la disponibilidad.</li>
+            <li>Datos de una cuenta tradicional, solo cuando la persona elija registrarse y de acuerdo con el aviso de privacidad.</li>
+        </ul>
+        <p>Los registros técnicos pueden incluir dirección IP, identificadores del dispositivo o datos similares si la infraestructura los genera. El operador deberá comprobarlo y explicarlo con transparencia; no debe afirmar que no los recopila si el servidor, proveedor de alojamiento, sistema operativo o servicios integrados sí los conservan.</p>
+
+        <h2>6. Información que no se debe recopilar por defecto</h2>
+        <p>En la modalidad anónima, la Aplicación debe configurarse para no solicitar ni almacenar deliberadamente, salvo necesidad demostrada y base jurídica válida:</p>
+        <ul>
+            <li>Nombre real, DUI, fecha de nacimiento, domicilio particular, teléfono o correo electrónico.</li>
+            <li>Contactos, agenda, mensajes, fotografías privadas o archivos del dispositivo que no sean seleccionados expresamente por la persona.</li>
+            <li>Ubicación GPS continua o en segundo plano.</li>
+            <li>Identificadores publicitarios, huellas digitales del dispositivo o datos de navegación para publicidad o seguimiento comercial.</li>
+            <li>Contraseñas de otras cuentas, información bancaria o datos ajenos al propósito del reporte.</li>
+        </ul>
+        <p>La Aplicación no debe acceder a cámara, micrófono, ubicación ni archivos sin una acción clara de la persona y permisos del sistema cuando sean necesarios. Si un archivo adjunto contiene metadatos, se deberá evaluar su eliminación antes de almacenarlo o advertirlo claramente.</p>
+        <p>Estas reglas describen el diseño recomendado, no una garantía técnica automática. El equipo desarrollador debe verificar el código, las dependencias, los registros del servidor y los servicios de terceros antes de prometer que una categoría de datos no se almacena.</p>
+
+        <h2>7. Finalidad, acceso, conservación y seguridad de los datos</h2>
+        <p>La información se utilizará exclusivamente para recibir, clasificar, revisar, dar seguimiento y, cuando corresponda, remitir reportes; responder consultas; proteger la seguridad del servicio; investigar abusos dentro de los límites legales; y cumplir obligaciones legales aplicables.</p>
+        <p>El acceso a los reportes debe limitarse al personal autorizado que necesite conocerlos para cumplir sus funciones. Se recomienda utilizar control de acceso por roles, autenticación reforzada, cifrado durante la transmisión y en almacenamiento, copias de seguridad protegidas, registro de accesos y procedimientos para responder a incidentes.</p>
+        <p>Los datos se conservarán solo durante el tiempo necesario para las finalidades declaradas, las necesidades legítimas de seguimiento y los plazos u órdenes legalmente aplicables. El responsable deberá definir y publicar plazos concretos por categoría; no debe prometer eliminación inmediata cuando existan obligaciones de conservación, investigaciones en curso o requerimientos válidos de autoridad.</p>
+        <p>La Aplicación no venderá datos personales ni utilizará los reportes para publicidad dirigida. Cualquier proveedor externo que procese datos deberá ser evaluado, limitado por contrato y divulgado conforme a la legislación aplicable.</p>
+        <p>El responsable debe establecer un canal para solicitudes de acceso, rectificación, supresión u otros derechos reconocidos por la normativa aplicable, sujeto a las excepciones legales pertinentes. La identidad de quien presenta una solicitud podrá necesitar verificación proporcional, sin pedir más datos de los necesarios.</p>
+
+        <h2>8. Límites del anonimato y posibles comunicaciones a autoridades</h2>
+        <p>D.CA de S.V. no debe garantizar que la identidad de una persona será imposible de descubrir en cualquier circunstancia. La protección depende del diseño técnico, de lo que la persona escriba o adjunte, de los proveedores utilizados y de la legislación aplicable.</p>
+        <p>La información podrá ser comunicada únicamente cuando exista una base jurídica válida, una obligación legal, una orden o requerimiento válido de autoridad competente, o una situación en que la comunicación esté legalmente permitida y sea necesaria para proteger derechos o atender un riesgo grave. Toda solicitud deberá verificarse, limitarse a lo estrictamente requerido y documentarse.</p>
+        <p>No se divulgará voluntariamente la identidad de una persona solo por presión informal, curiosidad o petición de particulares. Cuando la ley lo permita, se informará a la persona afectada sobre una divulgación. No se hará esa notificación cuando esté legalmente prohibida o pueda comprometer una investigación o la seguridad de alguien.</p>
+        <p>Si el sistema no recoge la identidad, el operador no puede prometer que podrá identificar o contactar personalmente a la persona denunciante. Para comunicación de seguimiento puede habilitarse un buzón asociado al token, sin exigir identidad.</p>
+
+        <h2>9. Envío de reportes y calidad de la información</h2>
+        <p>Antes de enviar un reporte, la persona debe revisar su contenido y separar lo que observó directamente de lo que escuchó de terceros o supone. Debe indicar, en la medida de lo posible, cuándo y dónde ocurrió el hecho, qué sucedió, quiénes podrían estar involucrados si conoce esa información y si existen evidencias o testigos.</p>
+        <p>No es obligatorio que la persona tenga pruebas concluyentes para comunicar de buena fe una sospecha. No obstante, debe explicar honestamente el fundamento de su preocupación y no presentar con certeza hechos que sabe que son falsos.</p>
+        <p>La persona debe evitar incluir información íntima, datos de menores, domicilios privados, información médica o datos de terceros que no sean relevantes. Si los incluye porque son indispensables, debe hacerlo con especial cuidado y únicamente en la medida necesaria.</p>
+        <p>El sistema debe mostrar una confirmación de recepción y un número de referencia. La confirmación significa únicamente que el reporte fue recibido por la Aplicación, salvo que indique expresamente otra cosa. No significa que los hechos hayan sido verificados ni que se haya iniciado una investigación oficial.</p>
+        <p>El equipo revisor podrá clasificar, solicitar aclaraciones mediante el canal disponible, identificar duplicados, remitir el reporte al canal competente o cerrarlo conforme a un procedimiento documentado. La Aplicación no debe prometer una respuesta en un plazo que no pueda cumplir.</p>
+
+        <h2>10. Qué puede hacer la persona usuaria</h2>
+        <ul>
+            <li>Comunicar claramenre y veridicamente con evidencias en los apartados establecidos hechos que haya observado, sufrido o conocido y que considere relevantes.</li>
+            <li>Describir los hechos con claridad, indicando qué conoce directamente y qué no puede confirmar.</li>
+            <li>Adjuntar únicamente archivos pertinentes y obtenidos de forma lícita.</li>
+            <li>Conservar su token y consultar el estado del reporte cuando esa función esté disponible.</li>
+            <li>Solicitar información sobre privacidad y ejercer los derechos que reconozca la legislación aplicable.</li>
+            <li>Corregir o ampliar un reporte mediante los mecanismos disponibles, explicando cualquier cambio importante.</li>
+            <li>Acudir directamente a la FGR, PNC, Juzgado de Paz u otra autoridad competente cuando necesite presentar una denuncia formal o cuando la situación lo requiera.</li>
+        </ul>
+
+        <h2>11. Qué NO puede hacer la persona usuaria</h2>
+        <ul>
+            <li>Inventar deliberadamente un delito, fabricar pruebas o atribuir a una persona hechos que sabe que son falsos.</li>
+            <li>Utilizar la Aplicación para venganzas, amenazas, extorsión, acoso, intimidación, discriminación o represalias.</li>
+            <li>Enviar reportes repetidos de forma abusiva con la finalidad de saturar el sistema o entorpecer la revisión.</li>
+            <li>Suplantar la identidad de otra persona o utilizar su cuenta o token sin autorización.</li>
+            <li>Publicar o adjuntar datos personales, imágenes íntimas o información confidencial de terceros que no sea necesaria para reportar el hecho.</li>
+            <li>Manipular, editar engañosamente o presentar fuera de contexto fotografías, audios, videos, documentos o conversaciones para inducir a error.</li>
+            <li>Intentar acceder a reportes ajenos, alterar el sistema, extraer información, introducir código malicioso o evadir controles de seguridad.</li>
+            <li>Utilizar la Aplicación para actividades comerciales, propaganda, spam o fines ajenos a su propósito.</li>
+            <li>Asumir que el anonimato autoriza conductas ilícitas o impide que las autoridades investiguen los hechos conforme a la ley.</li>
+        </ul>
+
+        <h2>12. Denuncias falsas, simulación de delitos y uso abusivo</h2>
+        <p>El anonimato no elimina la responsabilidad legal. El tratamiento penal depende de los hechos concretos, la intención de la persona, el destinatario del reporte y los elementos que la autoridad competente logre acreditar.</p>
+        <p>El artículo 303 del Código Penal salvadoreño contempla el delito de denuncia o acusación calumniosa cuando se denuncia o acusa ante autoridad judicial, o se da aviso a la autoridad judicial, a la Fiscalía General de la República o a órganos auxiliares, imputando a una persona la comisión de un delito sabiendo que es inocente. El texto consultado establece pena de prisión de uno a tres años.</p>
+        <p>El artículo 304 del Código Penal contempla la simulación de delitos: denunciar ante funcionario judicial o cuerpo de seguridad obligado legalmente a investigar un delito imaginario, o simular pruebas materiales para apoyar esa simulación, con el propósito de iniciar un procedimiento judicial o policial. El texto consultado establece pena de prisión de uno a cuatro años. También contempla llamadas falsas al sistema de emergencias 911 o su equivalente policial.</p>
+        <p>La aplicación de esos artículos a un envío realizado dentro de D.CA de S.V. depende de cómo funcione el servicio, si el reporte se comunica a una autoridad y de las circunstancias específicas. Por eso, estos términos no afirman que todo reporte incorrecto o no probado constituya automáticamente delito.</p>
+        <p>Una denuncia que no pueda comprobarse, una equivocación razonable o una sospecha formulada honestamente no equivalen por sí mismas a una denuncia falsa penal. La responsabilidad requiere analizar los elementos legales aplicables y no debe declararse de manera automática por el equipo de la Aplicación.</p>
+        <p>Los reportes deliberadamente falsos o abusivos pueden generar revisión, limitación de funciones, bloqueo de tokens o remisión de antecedentes a la autoridad competente cuando exista fundamento jurídico. Las medidas deben ser proporcionales, documentadas y respetar los derechos de las personas involucradas.</p>
+        <p>Hacer perder tiempo al equipo no genera automáticamente una pena de prisión ni una multa por el solo hecho de consumir recursos. Sin embargo, si la conducta constituye simulación de delito, denuncia calumniosa, amenazas, coacción, daños informáticos u otro ilícito, pueden existir consecuencias penales, civiles o de otra naturaleza conforme a la ley y a lo que determine la autoridad competente.</p>
+        <p>La persona usuaria acepta no utilizar el sistema para engañar intencionalmente, fabricar casos o perjudicar a terceros. Esta cláusula no debe utilizarse para intimidar a denunciantes de buena fe ni para disuadir la comunicación responsable de sospechas.</p>
+
+        <h2>13. Evidencias, datos de terceros y confidencialidad</h2>
+        <p>La persona usuaria declara que, según su leal saber y entender, tiene derecho a compartir los archivos que adjunta o que los comparte para comunicar hechos relevantes a la instancia correspondiente. No debe acceder ilícitamente a cuentas, dispositivos o documentos para obtener pruebas.</p>
+        <p>El equipo receptor debe tratar el contenido como información sensible desde el punto de vista operativo, aunque no toda información del reporte constituya legalmente una categoría especial de datos. Debe evitar la circulación informal, capturas de pantalla innecesarias y divulgación en redes sociales.</p>
+        <p>Los reportes pueden contener afirmaciones no verificadas. La persona que los revise no debe presentarlas públicamente como hechos comprobados ni difundir la identidad de personas denunciantes o denunciadas sin base legal.</p>
+
+        <h2>14. Situaciones urgentes</h2>
+        <p>La Aplicación no debe utilizarse como sustituto de servicios de emergencia. Si existe peligro inmediato para la vida o integridad, violencia en curso, necesidad urgente de asistencia médica o riesgo grave, la persona debe contactar directamente a los servicios de emergencia o a las autoridades competentes. El equipo debe verificar y publicar los números oficiales correctos antes del lanzamiento.</p>
+        <p>Enviar ayuda inmediatamente o garantiza intervención, salvo que esas capacidades existan de verdad.</p>
+
+        <h2>15. Moderación, suspensión y cierre de reportes</h2>
+        <p>El operador podrá limitar temporalmente el acceso, bloquear tokens o retirar contenido cuando sea necesario para proteger el servicio, prevenir abuso, atender riesgos de seguridad o cumplir la ley. Cuando sea posible y legal, registrará el motivo de la medida y habilitará un mecanismo de revisión.</p>
+        <p>El cierre administrativo de un reporte dentro de la Aplicación no determina que una persona sea culpable o inocente ni reemplaza las decisiones de las autoridades. La Aplicación no ejerce funciones judiciales.</p>
+
+        <h2>16. Disponibilidad, limitación del servicio y responsabilidad</h2>
+        <p>El servicio puede experimentar interrupciones, mantenimiento, errores o pérdida de conectividad. El operador debe adoptar medidas razonables de seguridad y continuidad, pero no prometer disponibilidad absoluta ni ausencia total de riesgos.</p>
+        <p>En la medida permitida por la ley, la Aplicación no garantiza que todos los reportes sean investigados, que la información enviada sea suficiente, que una autoridad adopte medidas o que se obtenga un resultado determinado. Nada en estos términos excluye derechos irrenunciables ni responsabilidades que legalmente no puedan limitarse.</p>
+        <p>La persona usuaria es responsable de la veracidad de lo que afirma según su conocimiento, del uso lícito de los archivos que adjunta y de proteger su token. El operador sigue siendo responsable de sus propias obligaciones legales y de la seguridad y tratamiento de datos bajo su control.</p>
+
+        <h2>17. Cambios a estos términos</h2>
+        <p>El operador podrá actualizar estos términos para reflejar cambios legales, técnicos u operativos. La versión vigente deberá mostrar fecha de actualización y estar accesible antes de que la persona acepte o continúe usando funciones afectadas. Cuando el cambio sea sustancial, se solicitará una nueva aceptación cuando corresponda.</p>
+
+        <h2>18. Legislación aplicable y resolución de controversias</h2>
+        <p>Estos términos se interpretarán conforme a la legislación vigente de la República de El Salvador, sin limitar los derechos o competencias de las autoridades administrativas, fiscales, policiales o judiciales. Las controversias se tramitarán ante las instancias competentes según la materia y las reglas legales aplicables.</p>
+        <p>Las referencias legales incluidas en este borrador son informativas y deben verificarse contra versiones oficiales consolidadas y sus reformas vigentes en la fecha de publicación. La aplicación deberá adecuarse a la Ley para la Protección de Datos Personales y sus reformas, el Código Penal, el Código Procesal Penal y cualquier otra norma aplicable al tipo de entidad que opere el servicio.</p>
+
+        <h2>19. Consentimiento expreso</h2>
+        <p>Antes de enviar un reporte, la Aplicación deberá mostrar un resumen claro que explique:</p>
+        <ul>
+            <li>qué datos se almacenarán;</li>
+            <li>(ii) qué significa y qué límites tiene el anonimato;</li>
+            <li>(iii) cómo se usará el token;</li>
+            <li>(iv) quién puede revisar el reporte;</li>
+            <li>(v) en qué supuestos puede compartirse información;</li>
+            <li>(vi) que el envío por la Aplicación no necesariamente equivale a una denuncia formal ante una autoridad; y</li>
+            <li>(vii) las consecuencias potenciales de fabricar deliberadamente denuncias o pruebas.</li>
+        </ul>
+
+        <div style="text-align: center; margin-top: 50px; padding-top: 20px; border-top: 1px solid #eee;">
+            <a href="{{ url_for('index') }}" style="background: #111; color: #fff; padding: 12px 30px; text-decoration: none; border-radius: 8px; font-weight: 600; font-size: 14px; display: inline-block;">Aceptar y Volver</a>
+        </div>
+
+    </main>
+
+</body>
+</html>

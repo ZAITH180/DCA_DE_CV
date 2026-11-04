@@ -5,23 +5,68 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>D.C.A DE S.V - Notificaciones</title>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
 </head>
 <body style="background-color: #fafbfc; margin: 0; font-family: 'Montserrat', sans-serif;">
 
+    <!-- Encabezado igual al del Perfil -->
+    <header style="background: #ffffff; padding: 18px 40px; display: flex; align-items: center; border-bottom: 1px solid #eaeaea; position: sticky; top: 0; z-index: 10;">
+        <a href="{{ url_for('muro') }}" style="display: flex; align-items: center; gap: 8px; text-decoration: none; color: #000; font-weight: 600; font-size: 14px;">
+            <span style="font-size: 18px;">‹</span> Volver al muro
+        </a>
+    </header>
+
     <main style="max-width: 650px; margin: 40px auto; padding: 0 20px;">
         
-        <h1 style="font-size: 24px; font-weight: 700; color: #111; margin-bottom: 24px;">Notificaciones</h1>
+        <h1 style="font-size: 24px; font-weight: 700; color: #111; margin-bottom: 24px;">Tus Notificaciones</h1>
 
-        <!-- Mensaje de estado vacío -->
-        <div style="background: #ffffff; border: 1px dashed #d0d5dd; border-radius: 12px; padding: 45px 20px; text-align: center; box-shadow: 0 2px 6px rgba(0,0,0,0.02);">
-            <p style="margin: 0; font-size: 14px; color: #666; font-weight: 500;">No hay notificaciones disponibles</p>
-        </div>
+        <div style="display: flex; flex-direction: column; gap: 12px;">
+            {% if notificaciones %}
+                {% for d in notificaciones %}
+                    <!-- Tarjeta de Notificación -->
+                    <div style="background: #ffffff; border: 1px solid #eaeaea; border-radius: 12px; padding: 20px 24px; display: flex; align-items: flex-start; gap: 16px; box-shadow: 0 2px 6px rgba(0,0,0,0.02);">
+                        
+                        <!-- Icono dinámico según el estado -->
+                        <div style="width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+                            background-color: {{ '#e3f2fd' if d.estado == 'En Proceso' else '#fff3e0' }}; 
+                            color: {{ '#2962ff' if d.estado == 'En Proceso' else '#f98006' }};">
+                            
+                            {% if d.estado == 'En Proceso' %}
+                                <i class="fa-solid fa-spinner"></i>
+                            {% elif d.estado == 'Cerrada' %}
+                                <i class="fa-solid fa-circle-check"></i>
+                            {% else %}
+                                <i class="fa-solid fa-bell"></i>
+                            {% endif %}
+                        </div>
 
-        <!-- Enlace simplificado -->
-        <div style="margin-top: 25px;">
-            <a href="{{ url_for('muro') }}" style="color: #f98006; text-decoration: none; font-weight: 600; font-size: 13px;">
-                ← Volver
-            </a>
+                        <div>
+                            <!-- Título y fecha -->
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; width: 100%;">
+                                <h2 style="margin: 0; font-size: 15px; color: #111; font-weight: 700;">Actualización de Denuncia</h2>
+                                <span style="color: #999; font-size: 12px;">{{ d.fecha.strftime('%d/%m/%Y') if d.fecha else '' }}</span>
+                            </div>
+                            
+                            <!-- Mensaje dinámico -->
+                            <p style="margin: 0; font-size: 13px; color: #555; line-height: 1.4;">
+                                Tu denuncia sobre <b>{{ d.categoria }}</b> ha cambiado al estado: 
+                                <span style="font-weight: 700; 
+                                    color: {{ '#2962ff' if d.estado == 'En Proceso' else '#f98006' }};">
+                                    {{ d.estado }}
+                                </span>.
+                            </p>
+                        </div>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <!-- Estado vacío (Igual a tu diseño original pero más elegante) -->
+                <div style="background: #ffffff; border: 1px dashed #d0d5dd; border-radius: 12px; padding: 50px 20px; text-align: center; box-shadow: 0 2px 6px rgba(0,0,0,0.02);">
+                    <i class="fa-regular fa-bell-slash" style="font-size: 32px; color: #ccc; margin-bottom: 15px; display: block;"></i>
+                    <p style="margin: 0; font-size: 15px; color: #666; font-weight: 500;">No hay notificaciones disponibles</p>
+                    <p style="margin: 5px 0 0 0; font-size: 13px; color: #999;">Te avisaremos cuando alguna de tus denuncias cambie de estado.</p>
+                </div>
+            {% endif %}
         </div>
 
     </main>

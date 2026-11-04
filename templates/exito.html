@@ -6,7 +6,9 @@
     <title>D.C.A DE S.V - Exito</title>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
-</head>
+
+
+ 
 <body>
 
     <header class="navbar">
@@ -46,6 +48,7 @@
         </footer>
     </main>
 
-    <script src="{{ url_for('serve_js', filename='main.js') }}"></script>
+    <!-- Ruta del script corregida para evitar el error 404 -->
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
 </body>
 </html>

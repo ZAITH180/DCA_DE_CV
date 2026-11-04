@@ -11,7 +11,6 @@ app.secret_key = 'super_secret_key_dca'
 # --- CONFIGURACIÓN DE SUBIDA DE ARCHIVOS ---
 UPLOAD_FOLDER = os.path.join('static', 'uploads')
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
-# Asegurarnos de que la carpeta exista
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 
 # --- CONFIGURACIÓN DE LA BASE DE DATOS ---
@@ -33,9 +32,10 @@ class Denuncia(db.Model):
     usuario_id = db.Column(db.Integer, db.ForeignKey('usuarios.id'), nullable=False)
     categoria = db.Column(db.String(100), nullable=False)
     descripcion = db.Column(db.Text, nullable=False)
-    ruta_imagen = db.Column(db.String(255), nullable=True) # Nuevo campo
-    latitud = db.Column(db.String(50), nullable=True)      # Nuevo campo
-    longitud = db.Column(db.String(50), nullable=True)     # Nuevo campo
+    ruta_imagen = db.Column(db.String(255), nullable=True)
+    latitud = db.Column(db.String(50), nullable=True)
+    longitud = db.Column(db.String(50), nullable=True)
+    estado = db.Column(db.String(50), default='Reciente')
     fecha = db.Column(db.TIMESTAMP, server_default=db.func.current_timestamp())
 
 with app.app_context():
@@ -52,8 +52,19 @@ def muro():
     if 'usuario_id' not in session:
         return redirect(url_for('login'))
     
-    denuncias_usuario = Denuncia.query.filter_by(usuario_id=session['usuario_id']).order_by(Denuncia.fecha.desc()).all()
-    return render_template('muro.html', nombre=session['usuario_nombre'], denuncias=denuncias_usuario)
+    filtro = request.args.get('filtro', 'Todos')
+    query = Denuncia.query.filter_by(usuario_id=session['usuario_id'])
+    
+    if filtro == 'Recientes':
+        query = query.filter_by(estado='Reciente')
+    elif filtro == 'En Proceso':
+        query = query.filter_by(estado='En Proceso')
+    elif filtro == 'Cerradas':
+        query = query.filter_by(estado='Cerrada')
+    
+    denuncias_usuario = query.order_by(Denuncia.fecha.desc()).all()
+    
+    return render_template('muro.html', nombre=session['usuario_nombre'], denuncias=denuncias_usuario, filtro_activo=filtro)
 
 @app.route('/denuncia')
 def denuncia():
@@ -61,7 +72,6 @@ def denuncia():
         return redirect(url_for('login'))
     return render_template('denuncia.html')
 
-# --- RUTA PARA GUARDAR LA DENUNCIA CON IMAGEN Y UBICACIÓN ---
 @app.route('/publicar_denuncia', methods=['POST'])
 def publicar_denuncia():
     if 'usuario_id' not in session:
@@ -71,20 +81,17 @@ def publicar_denuncia():
     descripcion = request.form.get('descripcion')
     latitud = request.form.get('latitud')
     longitud = request.form.get('longitud')
-    foto = request.files.get('foto') # Recibimos el archivo
+    foto = request.files.get('foto')
     
     if not categoria or not descripcion:
         flash("Por favor, llene los campos de texto.", "error")
         return redirect(url_for('denuncia'))
 
-    # Guardar la imagen si el usuario subió una
     ruta_guardada = None
     if foto and foto.filename != '':
-        # Limpiamos el nombre del archivo por seguridad
         filename = secure_filename(foto.filename)
-        # Lo guardamos en static/uploads/
         foto.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-        ruta_guardada = filename # Solo guardamos el nombre en la BD
+        ruta_guardada = filename
 
     nueva_denuncia = Denuncia(
         usuario_id=session['usuario_id'],
@@ -92,20 +99,25 @@ def publicar_denuncia():
         descripcion=descripcion,
         ruta_imagen=ruta_guardada,
         latitud=latitud,
-        longitud=longitud
+        longitud=longitud,
+        estado='Reciente'
     )
     
     try:
         db.session.add(nueva_denuncia)
         db.session.commit()
-        flash("¡Denuncia publicada exitosamente!", "success")
-        return redirect(url_for('muro'))
+        return redirect(url_for('exito'))
     except Exception as e:
         db.session.rollback()
         flash(f"Error al publicar: {str(e)}", "error")
         return redirect(url_for('denuncia'))
 
-# --- REGISTRO, LOGIN Y LOGOUT ---
+@app.route('/exito')
+def exito():
+    if 'usuario_id' not in session:
+        return redirect(url_for('login'))
+    return render_template('exito.html')
+
 @app.route('/register', methods=['GET', 'POST'])
 def register():
     if request.method == 'POST':
@@ -161,20 +173,48 @@ def logout():
     session.clear()
     return redirect(url_for('index'))
 
-# --- RUTAS DE PLACEHOLDER (Para que el muro no falle) ---
+# --- RUTA DE NOTIFICACIONES ---
 @app.route('/notificaciones')
 def notificaciones():
     if 'usuario_id' not in session:
         return redirect(url_for('login'))
-    # Por ahora redirigimos al muro
-    return redirect(url_for('muro')) 
+    
+    # Buscamos las denuncias del usuario que NO estén en 'Reciente'
+    denuncias_actualizadas = Denuncia.query.filter(
+        Denuncia.usuario_id == session['usuario_id'],
+        Denuncia.estado != 'Reciente'
+    ).all()
+    
+    # Si hay al menos una denuncia actualizada, enviamos un mensaje
+    if len(denuncias_actualizadas) > 0:
+        mensaje = f"Tienes {len(denuncias_actualizadas)} denuncia(s) con actualizaciones de estado."
+    else:
+        mensaje = "No hay notificaciones disponibles"
+    
+    return render_template('notificaciones.html', mensaje=mensaje)
 
+# --- RUTA DEL PERFIL ---
 @app.route('/perfil')
 def perfil():
     if 'usuario_id' not in session:
         return redirect(url_for('login'))
-    # Por ahora redirigimos al muro
-    return redirect(url_for('muro'))
+    
+    usuario = Usuario.query.get(session['usuario_id'])
+    
+    return render_template('perfil.html', usuario=usuario)
 
+# --- RUTA DE TÉRMINOS Y CONDICIONES ---
+@app.route('/terminos')
+def terminos():
+    return render_template('terminos.html')
+
+# --- RUTA DE CONFIGURACIÓN ---
+@app.route('/configuracion')
+def configuracion():
+    if 'usuario_id' not in session:
+        return redirect(url_for('login'))
+    return render_template('configuracion.html')
+
+# --- INICIO DEL SERVIDOR (ESTO ERA LO QUE FALTABA) ---
 if __name__ == '__main__':
     app.run(debug=True)
