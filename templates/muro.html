@@ -16,12 +16,16 @@
             <span style="font-weight: 700; font-size: 16px; color: #000;">D.C.A DE S.V</span>
         </div>
         <div style="display: flex; align-items: center; gap: 20px;">
-            <!-- Icono de Notificaciones con enlace activo -->
+            
+            <!-- Botón de Cerrar Sesión -->
+            <a href="{{ url_for('logout') }}" style="text-decoration: none; color: #f98006; font-size: 13px; font-weight: 600;">Cerrar Sesión</a>
+
+            <!-- Icono de Notificaciones -->
             <a href="{{ url_for('notificaciones') }}" style="position: relative; cursor: pointer; display: flex; align-items: center; text-decoration: none;">
                 <img src="{{ url_for('static', filename='assets/Notificaciones.png') }}" alt="Notificaciones" style="width: 24px; height: 24px;">
                 <span style="position: absolute; top: -5px; right: -5px; background: #f98006; color: white; font-size: 9px; padding: 1px 5px; border-radius: 50%; font-weight: bold;">1</span>
             </a>
-            <!-- Icono de Perfil con enlace activo -->
+            <!-- Icono de Perfil -->
             <a href="{{ url_for('perfil') }}" style="cursor: pointer; display: flex; align-items: center; text-decoration: none;">
                 <img src="{{ url_for('static', filename='assets/image 11.png') }}" alt="Perfil" style="width: 38px; height: 38px; border-radius: 50%; object-fit: cover;">
             </a>
@@ -31,7 +35,7 @@
     <!-- Contenedor Principal -->
     <main style="max-width: 1300px; margin: 30px auto; padding: 0 40px;">
         
-        <!-- Filtros y botón alineados estrictamente a la izquierda -->
+        <!-- Filtros y botón de agregar -->
         <div style="display: flex; align-items: center; justify-content: flex-start; gap: 15px; margin-bottom: 35px; width: 100%;">
             <div style="background: #ffffff; padding: 5px; border-radius: 30px; display: flex; gap: 4px; box-shadow: 0 2px 6px rgba(0,0,0,0.04); border: 1px solid #eef0f2;">
                 <button style="border: none; background: transparent; color: #666; padding: 8px 22px; border-radius: 20px; font-weight: 600; cursor: pointer; font-size: 13px;">Todos</button>
@@ -40,18 +44,57 @@
                 <button style="border: none; background: transparent; color: #666; padding: 8px 22px; border-radius: 20px; font-weight: 600; cursor: pointer; font-size: 13px;">Cerradas</button>
             </div>
 
+            <!-- Botón + para ir a crear denuncia -->
             <a href="{{ url_for('denuncia') }}" style="width: 40px; height: 40px; background: #ffffff; border-radius: 50%; display: flex; align-items: center; justify-content: center; text-decoration: none; color: #000; font-size: 22px; font-weight: bold; box-shadow: 0 2px 6px rgba(0,0,0,0.06); border: 1px solid #eef0f2;">
                 +
             </a>
         </div>
 
-        <!-- Área base vacía -->
-        <div style="min-height: 400px; display: flex; align-items: center; justify-content: center; border: 2px dashed #e0e0e0; border-radius: 16px;">
-            <p style="color: #888; font-size: 14px; font-weight: 500;">Espacio base listo para el muro de denuncias</p>
+        <!-- Saludo Personalizado -->
+        <h2 style="font-size: 22px; font-weight: 600; margin-bottom: 20px; color: #333;">
+            Hola, {{ nombre }}. Bienvenido a tu muro.
+        </h2>
+
+        <!-- LISTA DE DENUNCIAS DINÁMICA -->
+        <div style="display: flex; flex-direction: column; gap: 20px;">
+            {% if denuncias %}
+                {% for d in denuncias %}
+                    <div style="background: #ffffff; border: 1px solid #eef0f2; border-radius: 16px; padding: 20px; box-shadow: 0 2px 6px rgba(0,0,0,0.02);">
+                        
+                        <!-- Cabecera de la tarjeta -->
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                            <span style="background: #f98006; color: white; padding: 4px 12px; border-radius: 20px; font-size: 11px; font-weight: 600; text-transform: uppercase;">{{ d.categoria }}</span>
+                            <span style="color: #999; font-size: 12px;">{{ d.fecha.strftime('%d/%m/%Y %H:%M') if d.fecha else '' }}</span>
+                        </div>
+
+                        <!-- Descripción -->
+                        <p style="color: #333; font-size: 14px; margin: 0 0 15px 0; line-height: 1.5;">{{ d.descripcion }}</p>
+                        
+                        <!-- Imagen de respaldo (si existe) -->
+                        {% if d.ruta_imagen %}
+                            <img src="{{ url_for('static', filename='uploads/' + d.ruta_imagen) }}" alt="Evidencia" style="max-width: 100%; max-height: 300px; border-radius: 8px; object-fit: cover; margin-bottom: 15px; display: block;">
+                        {% endif %}
+
+                        <!-- Ubicación (si existe) -->
+                        {% if d.latitud and d.longitud %}
+                            <a href="https://www.google.com/maps?q={{ d.latitud }},{{ d.longitud }}" target="_blank" style="display: inline-flex; align-items: center; gap: 5px; font-size: 12px; color: #f98006; text-decoration: none; font-weight: 600;">
+                                📍 Ver ubicación en Google Maps
+                            </a>
+                        {% endif %}
+                        
+                    </div>
+                {% endfor %}
+            {% else %}
+                <!-- Mensaje si no hay denuncias -->
+                <div style="min-height: 200px; display: flex; align-items: center; justify-content: center; border: 2px dashed #e0e0e0; border-radius: 16px;">
+                    <p style="color: #888; font-size: 14px; font-weight: 500;">Aún no has publicado ninguna denuncia.</p>
+                </div>
+            {% endif %}
         </div>
 
     </main>
 
-    <script src="{{ url_for('serve_js', filename='main.js') }}"></script>
+    <!-- Ruta del script corregida -->
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
 </body>
 </html>

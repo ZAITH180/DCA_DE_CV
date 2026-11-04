@@ -18,32 +18,50 @@
 
     <main class="main-container">
         <div class="card" style="max-width: 850px; width: 100%; padding: 40px; position: relative;">
-            <a href="{{ url_for('index') }}" style="position: absolute; top: 20px; right: 25px; font-size: 24px; text-decoration: none; color: #000; font-weight: 600;">&times;</a>
+            <a href="{{ url_for('muro') }}" style="position: absolute; top: 20px; right: 25px; font-size: 24px; text-decoration: none; color: #000; font-weight: 600;">&times;</a>
 
             <h1 class="card-title" style="text-align: left; font-size: 24px; margin-bottom: 5px;">Publica tu denuncia</h1>
             <p class="card-subtitle" style="text-align: left; margin-bottom: 30px;">Llene los campos con la información de su denuncia</p>
             
-            <form action="{{ url_for('exito') }}" method="POST" style="display: grid; grid-template-columns: 1fr 1fr; gap: 30px;">
+            <!-- IMPORTANTE: enctype="multipart/form-data" para enviar archivos -->
+            <form action="{{ url_for('publicar_denuncia') }}" method="POST" enctype="multipart/form-data" style="display: grid; grid-template-columns: 1fr 1fr; gap: 30px;">
+                
                 <div>
                     <label style="display: block; font-weight: 600; font-size: 14px; margin-bottom: 10px; color: #333;">Multimedia de Respaldo</label>
-                    <div style="border: 2px dashed #e0e0e0; border-radius: 12px; padding: 30px; text-align: center; background: #fafafa; margin-bottom: 25px;">
+                    
+                    <!-- Input real para la foto, pero lo ocultamos y usamos un label estilizado -->
+                    <input type="file" name="foto" id="foto" accept="image/*" style="display: none;" onchange="mostrarNombreArchivo()">
+                    <label for="foto" style="display: block; border: 2px dashed #e0e0e0; border-radius: 12px; padding: 30px; text-align: center; background: #fafafa; margin-bottom: 25px; cursor: pointer;">
                         <span style="font-size: 32px; display: block; margin-bottom: 8px;">🖼️</span>
-                        <span style="font-size: 13px; color: #666; font-weight: 500;">Adjuntar foto o Video</span>
-                    </div>
+                        <span id="texto-archivo" style="font-size: 13px; color: #666; font-weight: 500;">Adjuntar foto o Video (Click aquí)</span>
+                    </label>
 
-                    <label style="display: block; font-weight: 600; font-size: 14px; margin-bottom: 10px; color: #333;">Marque en el mapa el lugar de la denuncia:</label>
-                    <div style="height: 160px; background: #eef2f5; border-radius: 12px; border: 1px solid #ddd;"></div>
+                    <label style="display: block; font-weight: 600; font-size: 14px; margin-bottom: 10px; color: #333;">Ubicación de la denuncia:</label>
+                    
+                    <!-- Campos ocultos para latitud y longitud -->
+                    <input type="hidden" name="latitud" id="latitud">
+                    <input type="hidden" name="longitud" id="longitud">
+
+                    <!-- Botón para pedir ubicación -->
+                    <div style="height: 160px; background: #eef2f5; border-radius: 12px; border: 1px solid #ddd; display: flex; flex-direction: column; align-items: center; justify-content: center;">
+                        <button type="button" onclick="obtenerUbicacion()" style="padding: 10px 15px; background: #fff; border: 1px solid #ccc; border-radius: 8px; cursor: pointer; font-weight: 600;">📍 Obtener mi ubicación actual</button>
+                        <p id="estado-ubicacion" style="font-size: 12px; color: #666; margin-top: 10px; text-align: center;">Aún no has capturado tu ubicación</p>
+                    </div>
                 </div>
 
                 <div>
                     <label style="display: block; font-weight: 600; font-size: 14px; margin-bottom: 10px; color: #333;">Categoría del Reporte</label>
-                    <div style="border: 1px solid #ccc; border-radius: 8px; padding: 12px 15px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; color: #666; font-size: 14px;">
-                        <span>Seleccione su tipo de denuncia</span>
-                        <span>&lt;</span>
-                    </div>
+                    <select name="categoria" required style="width: 100%; border: 1px solid #ccc; border-radius: 8px; padding: 12px 15px; margin-bottom: 25px; color: #333; font-size: 14px; background: white; font-family: 'Montserrat', sans-serif;">
+                        <option value="" disabled selected>Seleccione su tipo de denuncia</option>
+                        <option value="Robo">Robo</option>
+                        <option value="Acoso">Acoso</option>
+                        <option value="Vandalismo">Vandalismo</option>
+                        <option value="Violencia">Violencia</option>
+                        <option value="Otro">Otro</option>
+                    </select>
 
                     <label style="display: block; font-weight: 600; font-size: 14px; margin-bottom: 10px; color: #333;">Detalles del Suceso</label>
-                    <textarea placeholder="Describa su denuncia:" style="width: 100%; height: 130px; border: 1px solid #ccc; border-radius: 8px; padding: 12px; font-family: 'Montserrat', sans-serif; resize: none; margin-bottom: 25px; font-size: 14px;"></textarea>
+                    <textarea name="descripcion" required placeholder="Describa su denuncia:" style="width: 100%; height: 130px; border: 1px solid #ccc; border-radius: 8px; padding: 12px; font-family: 'Montserrat', sans-serif; resize: none; margin-bottom: 25px; font-size: 14px;"></textarea>
 
                     <button type="submit" class="btn btn-dark" style="width: 100%; display: block; text-align: center; border: none; cursor: pointer; padding: 12px; border-radius: 8px; font-weight: 600;">Publicar</button>
                 </div>
@@ -51,6 +69,48 @@
         </div>
     </main>
 
-    <script src="{{ url_for('serve_js', filename='main.js') }}"></script>
+    <script>
+        // 1. Mostrar el nombre de la foto seleccionada
+        function mostrarNombreArchivo() {
+            const input = document.getElementById('foto');
+            const texto = document.getElementById('texto-archivo');
+            if (input.files.length > 0) {
+                texto.innerHTML = "✅ Archivo seleccionado: <b>" + input.files[0].name + "</b>";
+                texto.style.color = "#28a745";
+            }
+        }
+
+        // 2. Obtener geolocalización con la API del navegador
+        function obtenerUbicacion() {
+            const estado = document.getElementById('estado-ubicacion');
+            
+            if (!navigator.geolocation) {
+                estado.innerHTML = "❌ Tu navegador no soporta geolocalización.";
+                return;
+            }
+
+            estado.innerHTML = "⏳ Obteniendo coordenadas...";
+            estado.style.color = "#f98006";
+
+            navigator.geolocation.getCurrentPosition(
+                (position) => {
+                    // Si el usuario acepta compartir ubicación
+                    const lat = position.coords.latitude;
+                    const lng = position.coords.longitude;
+                    
+                    document.getElementById('latitud').value = lat;
+                    document.getElementById('longitud').value = lng;
+                    
+                    estado.innerHTML = "✅ Ubicación capturada: " + lat.toFixed(4) + ", " + lng.toFixed(4);
+                    estado.style.color = "#28a745";
+                },
+                (error) => {
+                    // Si el usuario niega el permiso
+                    estado.innerHTML = "❌ Permiso denegado. No se pudo obtener la ubicación.";
+                    estado.style.color = "#dc3545";
+                }
+            );
+        }
+    </script>
 </body>
 </html>
