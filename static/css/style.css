@@ -131,15 +131,17 @@ body {
     justify-content: center;
 }
 
+/* Contenedor del Checkbox */
 .checkbox-container {
     display: flex;
     align-items: center;
     gap: 16px;
     cursor: pointer;
     user-select: none;
+    position: relative;
 }
 
-/* Ocultar el checkbox nativo */
+/* Ocultar el checkbox nativo del navegador */
 .checkbox-container input {
     position: absolute;
     opacity: 0;
@@ -150,20 +152,40 @@ body {
 
 /* Checkbox cuadrado personalizado */
 .custom-checkbox {
-    width: 24px;
-    height: 24px;
-    border: 2px solid #000000;
-    background-color: transparent;
+    width: 22px;
+    height: 22px;
+    border: 2px solid #d0d0d0; /* Borde gris suave */
+    border-radius: 6px; /* Esquinas redondeadas */
+    background-color: #ffffff;
     display: inline-block;
     box-sizing: border-box;
-    transition: background-color 0.2s ease, border-color 0.2s ease;
+    transition: all 0.2s ease;
     flex-shrink: 0;
+    position: relative; /* Necesario para el chulito */
+}
+
+/* Efecto al pasar el mouse por encima */
+.checkbox-container:hover .custom-checkbox {
+    border-color: #ff8c00;
 }
 
 /* Estado seleccionado (Checked) */
 .checkbox-container input:checked ~ .custom-checkbox {
     background-color: #ff8c00;
     border-color: #ff8c00;
+}
+
+/* El "chulito" (✓) cuando está marcado */
+.checkbox-container input:checked ~ .custom-checkbox::after {
+    content: "";
+    position: absolute;
+    left: 6px;
+    top: 2px;
+    width: 5px;
+    height: 10px;
+    border: solid white;
+    border-width: 0 2px 2px 0;
+    transform: rotate(45deg);
 }
 
 /* Texto de Términos */
@@ -284,7 +306,7 @@ body {
 }
 
 /* =========================================
-   MODO OSCURO GLOBAL (NUEVO)
+   MODO OSCURO GLOBAL
    ========================================= */
 
 body.dark-mode {
@@ -340,9 +362,14 @@ body.dark-mode .form-group input:focus {
     background-color: #333 !important;
 }
 
-/* Checkbox */
+/* Checkbox en Modo Oscuro */
 body.dark-mode .custom-checkbox {
-    border-color: #e0e0e0 !important;
+    border-color: #888 !important;
+    background-color: transparent !important;
+}
+body.dark-mode .checkbox-container input:checked ~ .custom-checkbox {
+    background-color: #ff8c00 !important;
+    border-color: #ff8c00 !important;
 }
 
 /* Botón de volver */
@@ -357,4 +384,56 @@ body.dark-mode .btn-orange {
 body.dark-mode .btn-dark {
     background-color: #444 !important;
     color: #ffffff !important;
+}
+/* =========================================
+   ALERTA TOAST PERSONALIZADA
+   ========================================= */
+
+.alerta-toast {
+    position: fixed;
+    top: -100px; /* Empieza oculta arriba */
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: #1e1e1e; /* Fondo oscuro elegante */
+    color: #ffffff;
+    padding: 16px 24px;
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    z-index: 9999;
+    transition: top 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    border-left: 5px solid #ff8c00; /* Línea naranja de la marca */
+    min-width: 300px;
+}
+
+/* Clase que se activa desde JS para mostrar la alerta */
+.alerta-toast.mostrar {
+    top: 30px; /* Baja a su posición */
+}
+
+.alerta-icono {
+    font-size: 24px;
+    color: #ff8c00;
+}
+
+.alerta-texto {
+    font-size: 14px;
+    line-height: 1.4;
+    font-family: 'Montserrat', sans-serif;
+}
+
+.alerta-texto strong {
+    font-weight: 700;
+    font-size: 15px;
+    display: block;
+    margin-bottom: 2px;
+}
+
+/* Ajuste para el modo oscuro (que se vea bien en ambos) */
+body.dark-mode .alerta-toast {
+    background-color: #2c2c2c;
+    border: 1px solid #444;
+    border-left: 5px solid #ff8c00;
 }

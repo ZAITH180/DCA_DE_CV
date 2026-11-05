@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>D.C.A DE S.V - Muro de Denuncias</title>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Agregamos FontAwesome para los íconos -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
     <style>
         .grid-denuncias {
@@ -60,7 +62,6 @@
         .card-titulo span { font-weight: 700; }
         .card-desc { color: #666; font-size: 13px; line-height: 1.5; margin: 0; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
     </style>
-
 </head>
 <body style="background-color: #fafbfc; margin: 0; font-family: 'Montserrat', sans-serif;">
 
@@ -72,10 +73,19 @@
         </div>
         <div style="display: flex; align-items: center; gap: 20px;">
             <a href="{{ url_for('logout') }}" style="text-decoration: none; color: #f98006; font-size: 13px; font-weight: 600;">Cerrar Sesión</a>
-            <a href="{{ url_for('notificaciones') }}" style="position: relative; cursor: pointer; display: flex; align-items: center; text-decoration: none;">
-                <img src="{{ url_for('static', filename='assets/Notificaciones.png') }}" alt="Notificaciones" style="width: 24px; height: 24px;">
-                <span style="position: absolute; top: -5px; right: -5px; background: #f98006; color: white; font-size: 9px; padding: 1px 5px; border-radius: 50%; font-weight: bold;">1</span>
+            
+            <!-- ICONO DE NOTIFICACIONES DINÁMICO -->
+            <a href="{{ url_for('notificaciones') }}" style="position: relative; cursor: pointer; display: flex; align-items: center; text-decoration: none; color: #666; font-size: 20px;">
+                <i class="fa-regular fa-bell"></i>
+                
+                <!-- Si hay notificaciones mayores a 0, mostramos el globito naranja -->
+                {% if cantidad_notificaciones > 0 %}
+                    <span style="position: absolute; top: -6px; right: -8px; background: #f98006; color: white; font-size: 10px; padding: 2px 6px; border-radius: 50%; font-weight: bold; border: 2px solid #ffffff;">
+                        {{ cantidad_notificaciones }}
+                    </span>
+                {% endif %}
             </a>
+
             <a href="{{ url_for('perfil') }}" style="cursor: pointer; display: flex; align-items: center; text-decoration: none;">
                 <img src="{{ url_for('static', filename='assets/image 11.png') }}" alt="Perfil" style="width: 38px; height: 38px; border-radius: 50%; object-fit: cover;">
             </a>
@@ -125,35 +135,38 @@
         <div class="grid-denuncias">
             {% if denuncias %}
                 {% for d in denuncias %}
-                    <div class="card-denuncia">
-                        
-                        {% if d.ruta_imagen %}
-                            <img src="{{ url_for('static', filename='uploads/' + d.ruta_imagen) }}" alt="Evidencia" class="card-imagen">
-                        {% else %}
-                            <div class="card-imagen" style="background-color: #1a1a1a;"></div>
-                        {% endif %}
-
-                        <div class="card-contenido">
-                            <div class="card-header">
-                                <span class="badge-estado 
-                                    {% if d.estado == 'Reciente' %}estado-reciente
-                                    {% elif d.estado == 'En Proceso' %}estado-proceso
-                                    {% else %}estado-cerrada{% endif %}">
-                                    {{ d.estado }}
-                                </span>
-                                <span class="card-fecha">{{ d.fecha.strftime('%d/%m/%Y') if d.fecha else '' }}</span>
-                            </div>
-
-                            <p class="card-titulo">Denuncia por: <span>{{ d.categoria }}</span></p>
-                            <p class="card-desc">{{ d.descripcion }}</p>
+                    <!-- ENVOLVEMOS LA TARJETA EN UN ENLACE AQUÍ -->
+                    <a href="{{ url_for('ver_denuncia', id=d.id) }}" style="text-decoration: none; color: inherit; display: block;">
+                        <div class="card-denuncia">
                             
-                            {% if d.latitud and d.longitud %}
-                                <a href="https://www.google.com/maps?q={{ d.latitud }},{{ d.longitud }}" target="_blank" style="margin-top: 15px; font-size: 12px; color: #f98006; text-decoration: none; font-weight: 600; display: inline-block;">
-                                    📍 Ver ubicación
-                                </a>
+                            {% if d.ruta_imagen %}
+                                <img src="{{ url_for('static', filename='uploads/' + d.ruta_imagen) }}" alt="Evidencia" class="card-imagen">
+                            {% else %}
+                                <div class="card-imagen" style="background-color: #1a1a1a;"></div>
                             {% endif %}
+
+                            <div class="card-contenido">
+                                <div class="card-header">
+                                    <span class="badge-estado 
+                                        {% if d.estado == 'Reciente' %}estado-reciente
+                                        {% elif d.estado == 'En Proceso' %}estado-proceso
+                                        {% else %}estado-cerrada{% endif %}">
+                                        {{ d.estado }}
+                                    </span>
+                                    <span class="card-fecha">{{ d.fecha.strftime('%d/%m/%Y') if d.fecha else '' }}</span>
+                                </div>
+
+                                <p class="card-titulo">Denuncia por: <span>{{ d.categoria }}</span></p>
+                                <p class="card-desc">{{ d.descripcion }}</p>
+                                
+                                {% if d.latitud and d.longitud %}
+                                    <span style="margin-top: 15px; font-size: 12px; color: #f98006; font-weight: 600; display: inline-block;">
+                                        📍 Ver ubicación
+                                    </span>
+                                {% endif %}
+                            </div>
                         </div>
-                    </div>
+                    </a>
                 {% endfor %}
             {% else %}
                 <div style="grid-column: 1 / -1; min-height: 200px; display: flex; align-items: center; justify-content: center; border: 2px dashed #e0e0e0; border-radius: 16px;">

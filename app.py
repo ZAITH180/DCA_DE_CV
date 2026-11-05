@@ -29,7 +29,7 @@ class Usuario(db.Model):
 class Denuncia(db.Model):
     __tablename__ = 'denuncias'
     id = db.Column(db.Integer, primary_key=True)
-    usuario_id = db.Column(db.Integer, db.ForeignKey('usuarios.id'), nullable=False)
+    usuario_id = db.Column(db.Integer, db.ForeignKey('usuarios.id'), nullable=True) # Ahora permite nulos
     categoria = db.Column(db.String(100), nullable=False)
     descripcion = db.Column(db.Text, nullable=False)
     ruta_imagen = db.Column(db.String(255), nullable=True)
@@ -46,6 +46,25 @@ with app.app_context():
 @app.route('/')
 def index():
     return render_template('index.html')
+
+# --- NUEVA RUTA: ACCESO ANÓNIMO ---
+@app.route('/anonimo')
+def anonimo():
+    # Marcamos en la sesión que este usuario es anónimo
+    session['anonimo'] = True
+    return redirect(url_for('muro_anonimo'))
+
+# --- NUEVA RUTA: MURO ANÓNIMO ---
+@app.route('/muro_anonimo')
+def muro_anonimo():
+    # Solo se puede acceder si se marcó como anónimo
+    if not session.get('anonimo'):
+        return redirect(url_for('index'))
+    
+    # Traemos TODAS las denuncias anónimas (donde usuario_id es NULL)
+    denuncias_anonimas = Denuncia.query.filter_by(usuario_id=None).order_by(Denuncia.fecha.desc()).all()
+    
+    return render_template('muro_anonimo.html', denuncias=denuncias_anonimas)
 
 @app.route('/muro')
 def muro():
@@ -64,18 +83,30 @@ def muro():
     
     denuncias_usuario = query.order_by(Denuncia.fecha.desc()).all()
     
-    return render_template('muro.html', nombre=session['usuario_nombre'], denuncias=denuncias_usuario, filtro_activo=filtro)
-
+    # Contar notificaciones (denuncias que no están 'Reciente')
+    cantidad_notificaciones = Denuncia.query.filter(
+        Denuncia.usuario_id == session['usuario_id'],
+        Denuncia.estado != 'Reciente'
+    ).count()
+    
+    return render_template('muro.html', 
+                           nombre=session['usuario_nombre'], 
+                           denuncias=denuncias_usuario, 
+                           filtro_activo=filtro,
+                           cantidad_notificaciones=cantidad_notificaciones)  
+# --- FORMULARIO DE DENUNCIA (Aplica para ambos) ---
 @app.route('/denuncia')
 def denuncia():
-    if 'usuario_id' not in session:
-        return redirect(url_for('login'))
+    if 'usuario_id' not in session and not session.get('anonimo'):
+        return redirect(url_for('index'))
     return render_template('denuncia.html')
 
+# --- GUARDAR DENUNCIA (Modificado) ---
 @app.route('/publicar_denuncia', methods=['POST'])
 def publicar_denuncia():
-    if 'usuario_id' not in session:
-        return redirect(url_for('login'))
+    # Verificamos si hay sesión (normal o anónima)
+    if 'usuario_id' not in session and not session.get('anonimo'):
+        return redirect(url_for('index'))
     
     categoria = request.form.get('categoria')
     descripcion = request.form.get('descripcion')
@@ -93,8 +124,11 @@ def publicar_denuncia():
         foto.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
         ruta_guardada = filename
 
+    # Si está logueado usa su ID, si es anónimo se queda en None
+    id_usuario = session.get('usuario_id', None)
+
     nueva_denuncia = Denuncia(
-        usuario_id=session['usuario_id'],
+        usuario_id=id_usuario,
         categoria=categoria,
         descripcion=descripcion,
         ruta_imagen=ruta_guardada,
@@ -114,10 +148,11 @@ def publicar_denuncia():
 
 @app.route('/exito')
 def exito():
-    if 'usuario_id' not in session:
-        return redirect(url_for('login'))
+    if 'usuario_id' not in session and not session.get('anonimo'):
+        return redirect(url_for('index'))
     return render_template('exito.html')
 
+# --- REGISTRO, LOGIN Y LOGOUT (Igual que antes) ---
 @app.route('/register', methods=['GET', 'POST'])
 def register():
     if request.method == 'POST':
@@ -159,6 +194,7 @@ def login():
         usuario = Usuario.query.filter_by(email=email).first()
         
         if usuario and check_password_hash(usuario.password, password):
+            session.clear() # Limpiamos cualquier sesión anónima previa
             session['usuario_id'] = usuario.id
             session['usuario_nombre'] = usuario.username
             return redirect(url_for('muro'))
@@ -173,48 +209,48 @@ def logout():
     session.clear()
     return redirect(url_for('index'))
 
-# --- RUTA DE NOTIFICACIONES ---
+# --- RUTAS DE NOTIFICACIONES Y PERFIL ---
 @app.route('/notificaciones')
 def notificaciones():
     if 'usuario_id' not in session:
         return redirect(url_for('login'))
     
-    # Buscamos las denuncias del usuario que NO estén en 'Reciente'
     denuncias_actualizadas = Denuncia.query.filter(
         Denuncia.usuario_id == session['usuario_id'],
         Denuncia.estado != 'Reciente'
-    ).all()
+    ).order_by(Denuncia.fecha.desc()).all()
     
-    # Si hay al menos una denuncia actualizada, enviamos un mensaje
-    if len(denuncias_actualizadas) > 0:
-        mensaje = f"Tienes {len(denuncias_actualizadas)} denuncia(s) con actualizaciones de estado."
-    else:
-        mensaje = "No hay notificaciones disponibles"
-    
-    return render_template('notificaciones.html', mensaje=mensaje)
+    return render_template('notificaciones.html', notificaciones=denuncias_actualizadas)
 
-# --- RUTA DEL PERFIL ---
 @app.route('/perfil')
 def perfil():
     if 'usuario_id' not in session:
         return redirect(url_for('login'))
     
     usuario = Usuario.query.get(session['usuario_id'])
-    
     return render_template('perfil.html', usuario=usuario)
 
-# --- RUTA DE TÉRMINOS Y CONDICIONES ---
 @app.route('/terminos')
 def terminos():
     return render_template('terminos.html')
 
-# --- RUTA DE CONFIGURACIÓN ---
 @app.route('/configuracion')
 def configuracion():
     if 'usuario_id' not in session:
         return redirect(url_for('login'))
     return render_template('configuracion.html')
 
-# --- INICIO DEL SERVIDOR (ESTO ERA LO QUE FALTABA) ---
+# --- RUTA PARA VER EL DETALLE DE UNA DENUNCIA ---
+@app.route('/denuncia/<int:id>')
+def ver_denuncia(id):
+    # Verificamos que esté logueado o en modo anónimo
+    if 'usuario_id' not in session and not session.get('anonimo'):
+        return redirect(url_for('index'))
+    
+    # Buscamos la denuncia por su ID
+    denuncia = Denuncia.query.get_or_404(id)
+    
+    return render_template('detalle_denuncia.html', d=denuncia)
+
 if __name__ == '__main__':
     app.run(debug=True)

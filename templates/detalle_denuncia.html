@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>D.C.A DE S.V - Detalle de Denuncia</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Leaflet CSS para el mapa -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    
+    <script>
+        if (localStorage.getItem('theme') === 'dark') {
+            document.documentElement.classList.add('dark-mode-html');
+            document.addEventListener('DOMContentLoaded', () => {
+                document.body.classList.add('dark-mode');
+            });
+        }
+    </script>
+    <style>
+        html.dark-mode-html { background-color: #121212 !important; }
+        
+        .detalle-card {
+            background: #ffffff;
+            max-width: 700px;
+            margin: 40px auto;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            border: 1px solid #eaeaea;
+        }
+        .detalle-imagen {
+            width: 100%;
+            height: 350px;
+            object-fit: cover;
+            background-color: #1a1a1a;
+        }
+        .detalle-contenido {
+            padding: 30px;
+        }
+        .badge-estado {
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 700;
+            text-transform: capitalize;
+            display: inline-block;
+        }
+        .estado-reciente { background-color: #ffeb3b; color: #000; }
+        .estado-proceso { background-color: #2962ff; color: #fff; }
+        .estado-cerrada { background-color: #ff9800; color: #fff; }
+        
+        .detalle-fecha { color: #888; font-size: 13px; }
+        .detalle-tipo { color: #f98006; font-size: 12px; font-weight: 700; text-transform: uppercase; margin-top: 20px; display: block; letter-spacing: 1px; }
+        .detalle-titulo { font-size: 22px; color: #111; margin: 5px 0 25px 0; font-weight: 700; }
+        .detalle-seccion { font-size: 14px; font-weight: 700; color: #333; margin-bottom: 8px; border-bottom: 1px solid #eee; padding-bottom: 8px; }
+        .detalle-texto { font-size: 14px; color: #555; line-height: 1.6; margin-bottom: 30px; }
+        
+        /* Estilos del mapa */
+        #map { height: 250px; width: 100%; border-radius: 12px; border: 1px solid #ddd; margin-top: 10px; z-index: 1; }
+    </style>
+</head>
+<body style="background-color: #fafbfc; margin: 0; font-family: 'Montserrat', sans-serif;">
+
+    <!-- Header con botón para volver al muro -->
+    <header style="background: #ffffff; padding: 18px 40px; display: flex; align-items: center; border-bottom: 1px solid #eaeaea;">
+        <a href="{{ url_for('muro_anonimo') if session.get('anonimo') else url_for('muro') }}" style="display: flex; align-items: center; gap: 8px; text-decoration: none; color: #000; font-weight: 600; font-size: 14px;">
+            <span style="font-size: 18px;">‹</span> Volver al muro
+        </a>
+    </header>
+
+    <main>
+        <div class="detalle-card">
+            
+            <!-- Imagen -->
+            {% if d.ruta_imagen %}
+                <img src="{{ url_for('static', filename='uploads/' + d.ruta_imagen) }}" alt="Evidencia" class="detalle-imagen">
+            {% else %}
+                <div class="detalle-imagen"></div>
+            {% endif %}
+
+            <div class="detalle-contenido">
+                
+                <!-- Cabecera: Estado y Fecha -->
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <span class="badge-estado 
+                        {% if d.estado == 'Reciente' %}estado-reciente
+                        {% elif d.estado == 'En Proceso' %}estado-proceso
+                        {% else %}estado-cerrada{% endif %}">
+                        {{ d.estado }}
+                    </span>
+                    <span class="detalle-fecha"><i class="fa-regular fa-calendar"></i> {{ d.fecha.strftime('%d/%m/%Y') if d.fecha else '' }}</span>
+                </div>
+
+                <!-- Tipo y Título -->
+                <span class="detalle-tipo">Tipo de denuncia</span>
+                <h1 class="detalle-titulo">Denuncia por: {{ d.categoria }}</h1>
+
+                <!-- Descripción -->
+                <h2 class="detalle-seccion">Descripción de denuncia:</h2>
+                <p class="detalle-texto">{{ d.descripcion }}</p>
+
+                <!-- Ubicación -->
+                <h2 class="detalle-seccion"><i class="fa-solid fa-location-dot"></i> Ubicación del lugar:</h2>
+                
+                {% if d.latitud and d.longitud %}
+                    <!-- Mapa interactivo -->
+                    <div id="map"></div>
+                    
+                    <!-- IMPORTANTE: Cargamos el script de Leaflet AQUÍ, antes de usarlo -->
+                    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+                    <script>
+                        // Coordenadas enviadas desde Python
+                        var lat = {{ d.latitud }};
+                        var lng = {{ d.longitud }};
+
+                        // Inicializar mapa
+                        var map = L.map('map').setView([lat, lng], 16);
+
+                        // Cargar imágenes del mapa (OpenStreetMap)
+                        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                            maxZoom: 19,
+                            attribution: '© OpenStreetMap'
+                        }).addTo(map);
+
+                        // Poner el marcador rojo
+                        L.marker([lat, lng]).addTo(map)
+                            .bindPopup('Ubicación de la denuncia')
+                            .openPopup();
+                    </script>
+                {% else %}
+                    <div style="background: #f8f9fa; padding: 20px; text-align: center; border-radius: 12px; color: #888; font-size: 13px;">
+                        <i class="fa-solid fa-map-location-dot" style="font-size: 24px; margin-bottom: 10px; display: block;"></i>
+                        No se adjuntó ubicación a esta denuncia.
+                    </div>
+                {% endif %}
+
+            </div>
+        </div>
+    </main>
+
+</body>
+</html>

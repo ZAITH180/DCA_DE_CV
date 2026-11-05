@@ -5,9 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>D.C.A DE S.V</title>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
-
- 
+</head>
 <body>
 
     <header class="navbar">
@@ -31,34 +31,38 @@
             </p>
 
             <div class="button-group">
-               <a href="#" 
-                onclick="continuarAnonimo(); return false;" 
-             class="btn btn-orange" 
-              style="display: block; text-align: center; text-decoration: none; line-height: normal;">
-              Continuar de forma anónima
+               <a href="#" onclick="continuarAnonimo(); return false;" class="btn btn-orange" style="display: block; text-align: center; text-decoration: none; line-height: normal;">
+                  Continuar de forma anónima
               </a>
-
-             <a href="#" 
-               onclick="continuarCorreo(); return false;" 
-                class="btn btn-dark" 
-                style="display: block; text-align: center; text-decoration: none; line-height: normal;">
+             <a href="#" onclick="continuarCorreo(); return false;" class="btn btn-dark" style="display: block; text-align: center; text-decoration: none; line-height: normal;">
                 Continuar con correo electrónico
              </a>
           </div>
         </div>
 
         <footer class="terms-footer">
-            <label class="checkbox-container">
+            <label for="terms" class="checkbox-container">
                 <input type="checkbox" id="terms">
                 <span class="custom-checkbox"></span>
                 <span class="terms-text">
                     Al continuar, aceptas los terminos<br>
-                    <!-- ENLACE CORREGIDO AQUÍ -->
                     y condiciones de <a href="{{ url_for('terminos') }}" class="brand-link">DEV’s<span class="orange-text">Service</span>C</a>
                 </span>
             </label>
         </footer>
     </main>
-<script src="{{ url_for('static', filename='js/main.js') }}"></script>
+
+    <!-- CONTENEDOR PARA LA ALERTA PERSONALIZADA -->
+    <div id="alerta-personalizada" class="alerta-toast">
+        <div class="alerta-icono">
+            <i class="fa-solid fa-circle-exclamation"></i>
+        </div>
+        <div class="alerta-texto">
+            <strong>¡Atención!</strong><br>
+            Debes aceptar los términos y condiciones.
+        </div>
+    </div>
+    
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
 </body>
 </html>
